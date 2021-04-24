@@ -6,38 +6,37 @@
 </head>
 <body>
     <div id="mountNode"></div>
-    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.7.1/dist/g6.min.js"></script>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-4.2.7/dist/g6.min.js"></script>
 
     <script>
       console.log(G6.Global.version);
     </script>
 </body>
 <script>
-    // const data = {
-    //   // 点集
-    //   nodes: [
-    //     {
-    //       id: 'node1', // String，该节点存在则必须，节点的唯一标识
-    //       x: 100, // Number，可选，节点位置的 x 值
-    //       y: 200, // Number，可选，节点位置的 y 值
-    //         label: '曹操',
-    //     },
-    //     {
-    //       id: 'node2', // String，该节点存在则必须，节点的唯一标识
-    //       x: 300, // Number，可选，节点位置的 x 值
-    //       y: 200, // Number，可选，节点位置的 y 值
-    //         label: '刘备',
-    //     },
-    //   ],
-    //   // 边集
-    //   edges: [
-    //     {
-    //       source: 'node1', // String，必须，起始点 id
-    //       target: 'node2', // String，必须，目标点 id
-    //     },
-    //   ],
-    // };
-
+    // const tooltip = new G6.Tooltip({
+    //   offsetX: 10,
+    //   offsetY: 10,
+    //   fixToNode: [1, 0.5],
+    //   // the types of items that allow the tooltip show up
+    //   // 允许出现 tooltip 的 item 类型
+    //   itemTypes: ['node', 'edge'],
+    //   // custom the tooltip's content
+    //   // 自定义 tooltip 内容
+    //   getContent: (e) => {
+    //     const outDiv = document.createElement('div');
+    //     outDiv.style.width = 'fit-content';
+    //     outDiv.style.height = 'fit-content';
+    //     const model = e.item.getModel();
+    //     if (e.item.getType() === 'node') {
+    //       outDiv.innerHTML = `${model.name}`;
+    //     } else {
+    //       const source = e.item.getSource();
+    //       const target = e.item.getTarget();
+    //       outDiv.innerHTML = `来源：${source.getModel().name}<br/>去向：${target.getModel().name}`;
+    //     }
+    //     return outDiv;
+    //   },
+    // });
 
     const graph = new G6.Graph({
         container: 'mountNode',
@@ -45,10 +44,11 @@
         height: 1200,
         fitView: true,
         fitViewPadding: [20, 40, 50, 20],
+        // plugins: [tooltip],
         modes: {
-            default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // 允许拖拽画布、放缩画布、拖拽节点
+            default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'activate-relations' ], // 允许拖拽画布、放缩画布、拖拽节点
           },
-        layout: {
+        layout: {                     //布局图的参数
             type: 'concentric',
             center: [ 200, 200 ],     // 可选，
             linkDistance: 100,         // 可选，边长
@@ -65,7 +65,7 @@
       });
     const main = async () => {
         const response = await fetch(
-            './Demo/data1.json',
+            './static/data1.json',
             // 'https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json',
         );
         const remoteData = await response.json();
