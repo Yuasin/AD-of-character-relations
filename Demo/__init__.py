@@ -9,7 +9,13 @@ app = Flask(__name__,
 
 @app.route('/')
 def hello():
-   return send_file('templates/G6Test.html')
+   return send_file('templates/main.html')
+
+
+@app.route('/CondorHeroes')
+def show_example(name=None):
+    return render_template('example.html', name=name)
+
 
 if __name__ == '__main__':
    app.run(debug='true')

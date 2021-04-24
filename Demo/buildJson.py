@@ -1,7 +1,7 @@
 import json
 import math
 
-
+# 边的权重为"label":edges[i][j]
 def buildJson(nodes: dict, edges: dict):
     data_list = {"nodes": [], "edges": []}
     id_node = {}
@@ -13,8 +13,8 @@ def buildJson(nodes: dict, edges: dict):
         id += 1
     for i in edges.keys():
         for j in edges[i]:
-            cur_edges = {"source":str(id_node[i]), "target":str(id_node[j])} #, "label":edges[i][j]
+            cur_edges = {"source":str(id_node[i]), "target":str(id_node[j]) , "weight":edges[i][j]}
             data_list["edges"].append(cur_edges)
 
-    with open('data1.json', 'w', encoding='utf-8') as f:
+    with open('data2weight.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data_list, ensure_ascii=False))

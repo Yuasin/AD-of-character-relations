@@ -12,7 +12,9 @@
       console.log(G6.Global.version);
     </script>
 </body>
+
 <script>
+     // src="{{ url_for('static', filename='node_modules/@antv/vis-predict-engine/dist/index.esm.js') }}"
     // const tooltip = new G6.Tooltip({
     //   offsetX: 10,
     //   offsetY: 10,
@@ -38,6 +40,25 @@
     //   },
     // });
 
+    const { louvain } = G6.Algorithm;
+
+    const button = document.createElement('button');
+    button.innerHTML = `Click Here to Clustering 点此自动聚类`;
+    document.getElementById('mountNode').appendChild(button);
+    const subjectColors = [
+      '#5F95FF', // blue
+      '#61DDAA',
+      '#65789B',
+      '#F6BD16',
+      '#7262FD',
+      '#78D3F8',
+      '#9661BC',
+      '#F6903D',
+      '#008685',
+      '#F08BB4',
+    ];
+    const colorSets = G6.Util.getColorSetsBySubjectColors(subjectColors, '#fff', 'default', '#777');
+
     const graph = new G6.Graph({
         container: 'mountNode',
         width: 2000,
@@ -46,12 +67,12 @@
         fitViewPadding: [20, 40, 50, 20],
         // plugins: [tooltip],
         modes: {
-            default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'activate-relations' ], // 允许拖拽画布、放缩画布、拖拽节点
+            default: ['drag-canvas', 'zoom-canvas', 'drag-node','activate-relations' ], // 允许拖拽画布、放缩画布、拖拽节点,
           },
         layout: {                     //布局图的参数
             type: 'concentric',
             center: [ 200, 200 ],     // 可选，
-            linkDistance: 100,         // 可选，边长
+            linkDistance: 100,        // 可选，边长
             preventOverlap: true,     // 可选，必须配合 nodeSize
             nodeSize: 30,             // 可选
             sweep: 10,                // 可选
@@ -63,17 +84,39 @@
             workerEnabled: true       // 可选，开启 web-worker
         }
       });
-    const main = async () => {
-        const response = await fetch(
-            './static/data1.json',
-            // 'https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json',
-        );
-        const remoteData = await response.json();
 
-        graph.data(remoteData); // 读取 Step 2 中的数据源到图上
+    fetch('./static/data2weight.json')
+      .then((res) => res.json())
+      .then((data) => {
+        graph.data(data);
         graph.render();
-    };// 渲染图
-    main();
+
+        button.addEventListener('click', (e) => {
+          const clusteredData = louvain(data, false);
+            console.log(clusteredData)
+          clusteredData.clusters.forEach((cluster, i) => {
+            const colorSet = colorSets[i % colorSets.length];
+            cluster.nodes.forEach((node) => {
+                const model = graph.findById(node.id).getModel();
+                model.style.fill = colorSet.mainFill
+                model.style.stroke = colorSet.mainStroke
+            });
+          });
+          graph.refresh();
+        });
+      });
+    // const main = async () => {
+    //     const response = await fetch(
+    //         './static/data2weight.json',
+    //         // 'https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json',
+    //     );
+    //     const remoteData = await response.json();
+    //
+    //     graph.data(remoteData); // 读取 Step 2 中的数据源到图上
+    //     graph.render();
+    // };// 渲染图
+    // main();
+
 </script>
 </html>
 

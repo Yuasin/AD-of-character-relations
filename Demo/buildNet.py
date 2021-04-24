@@ -18,7 +18,6 @@ test_section = all_section[200:250]
 # print(test_section)
 
 # adjacency_list 储存实体，以及与实体相连的其他实体,以及相连的次数 {entity:{connect_entity:times}}
-
 for cur_section in all_section:
     section_entity = set()
     # 统计实体出现在section中的次数，在一个section中出现多次只计算一次
@@ -39,7 +38,6 @@ for cur_section in all_section:
                 else:
                     adjacency_list[e][cur_entity] = 1
     section_entity.clear()
-
 
 # print(all_name)
 # print(adjacency_list)
