@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="mountNode"></div>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.7.1/dist/g6.min.js"></script>
+
+    <script>
+      console.log(G6.Global.version);
+    </script>
+</body>
+<script>
+    // const data = {
+    //   // 点集
+    //   nodes: [
+    //     {
+    //       id: 'node1', // String，该节点存在则必须，节点的唯一标识
+    //       x: 100, // Number，可选，节点位置的 x 值
+    //       y: 200, // Number，可选，节点位置的 y 值
+    //         label: '曹操',
+    //     },
+    //     {
+    //       id: 'node2', // String，该节点存在则必须，节点的唯一标识
+    //       x: 300, // Number，可选，节点位置的 x 值
+    //       y: 200, // Number，可选，节点位置的 y 值
+    //         label: '刘备',
+    //     },
+    //   ],
+    //   // 边集
+    //   edges: [
+    //     {
+    //       source: 'node1', // String，必须，起始点 id
+    //       target: 'node2', // String，必须，目标点 id
+    //     },
+    //   ],
+    // };
+
+
+    const graph = new G6.Graph({
+        container: 'mountNode',
+        width: 2000,
+        height: 1200,
+        fitView: true,
+        fitViewPadding: [20, 40, 50, 20],
+        modes: {
+            default: ['drag-canvas', 'zoom-canvas', 'drag-node'], // 允许拖拽画布、放缩画布、拖拽节点
+          },
+        layout: {
+            type: 'concentric',
+            center: [ 200, 200 ],     // 可选，
+            linkDistance: 100,         // 可选，边长
+            preventOverlap: true,     // 可选，必须配合 nodeSize
+            nodeSize: 30,             // 可选
+            sweep: 10,                // 可选
+            equidistant: false,       // 可选
+            startAngle: 0,            // 可选
+            clockwise: false,         // 可选
+            maxLevelDiff: 10,         // 可选
+            sortBy: 'degree',         // 可选
+            workerEnabled: true       // 可选，开启 web-worker
+        }
+      });
+    const main = async () => {
+        const response = await fetch(
+            './Demo/data1.json',
+            // 'https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json',
+        );
+        const remoteData = await response.json();
+
+        graph.data(remoteData); // 读取 Step 2 中的数据源到图上
+        graph.render();
+    };// 渲染图
+    main();
+</script>
+</html>
+
+
