@@ -8,7 +8,8 @@ def buildJson(nodes: dict, edges: dict):
     id = 0
     for i in nodes.keys():
         id_node[i] = id
-        cur_nodes = {"id":str(id), "label":i, "size":math.ceil(math.pow(nodes[i],1/2))}
+        # 对节点的size进行处理，能够突出大节点的同时不让大小节点差距过大
+        cur_nodes = {"id":str(id), "label":i, "size":math.ceil(math.pow(nodes[i],1/3))+4}
         data_list["nodes"].append(cur_nodes)
         id += 1
     for i in edges.keys():
