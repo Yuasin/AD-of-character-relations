@@ -1,3 +1,10 @@
+/*
+ * Container
+ */
+.container-fluid{
+  height: 100%;
+}
+
 .side-bar{
   height: 100%;
   background-color: #333;

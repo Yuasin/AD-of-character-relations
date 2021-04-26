@@ -7,6 +7,11 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="./static/relationMap.css" rel="stylesheet">
+<!--?    矢量图标-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css"
+    >
     <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
     <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
     <!--[if lt IE 9]>
@@ -22,7 +27,7 @@
     <div class = "container-fluid">
         <div class="row">
 <!--?            侧边栏：1.导航栏 2.人物关系复杂网络静态拓扑分析-->
-          <div class="col-md-4 side-bar" >
+          <div class="col-md-4 side-bar collapse in overlay" id = "sideBar">
 <!--?              侧标栏导航栏-->
               <div class="masthead clearfix">
                 <div class="inner">
@@ -47,16 +52,48 @@
                 </div>
                   <div id="accordion" class="panel-collapse collapse in">
                       <div class="panel-body">
+                          abc
+                      </div>
+                </div>
+              </div>
 
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordion">
+                        网络基本信息
+                        </a>
+                    </h3>
+                </div>
+                  <div id="accordion" class="panel-collapse collapse in">
+                      <div class="panel-body">
+                          abc
+                      </div>
+                </div>
+              </div>
+
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordion">
+                        网络基本信息
+                        </a>
+                    </h3>
+                </div>
+                  <div id="accordion" class="panel-collapse collapse in">
+                      <div class="panel-body">
+                          abc
                       </div>
                 </div>
               </div>
 
 
-
           </div>
 <!--?            网络栏：1.人物关系网络 2.网络关系布局选项、聚类选项、交互模式选择（查看相连结点）、时间轴选择-->
-          <div class="col-md-8">
+          <div class="col-md-8" style="padding-left: 0">
+              <button type="button" class="btn btn-primary hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+                  <span class="fas fa-align-left"></span>
+              </button>
             <div id="mountNode"></div>
           </div>
         </div>
@@ -71,6 +108,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script src="./static/sidebar.js"></script>
 </body>
 
 <script>
@@ -188,6 +226,13 @@
           graph.updateLayout(layoutF);
         });
       });
+
+    if (typeof window !== 'undefined')
+      window.onresize = () => {
+        if (!graph || graph.get('destroyed')) return;
+        if (!container || !container.scrollWidth || !container.scrollHeight) return;
+        graph.changeSize(container.scrollWidth, container.scrollHeight - 20);
+      };
     // const main = async () => {
     //     const response = await fetch(
     //         './static/data2weight.json',
