@@ -1,5 +1,6 @@
 import txtTest
 from buildJson import buildJson
+from analysis.network import networkAnalyse
 
 # 获取分段过的语料文件
 all_section = txtTest.getSection("../corpus4.txt")
@@ -42,3 +43,4 @@ for cur_section in all_section:
 # print(all_name)
 # print(adjacency_list)
 buildJson(all_name, adjacency_list)
+networkAnalyse(all_name, adjacency_list)

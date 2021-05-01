@@ -2,6 +2,7 @@ import json
 import math
 
 # 边的权重为"label":edges[i][j]
+# data_list为python数据格式
 def buildJson(nodes: dict, edges: dict):
     data_list = {"nodes": [], "edges": []}
     id_node = {}
