@@ -1,6 +1,5 @@
 import networkx as nx
-
-print(nx)
+import json
 
 
 def networkAnalyse(nodes: dict, edges: dict):
@@ -41,7 +40,7 @@ def networkAnalyse(nodes: dict, edges: dict):
     # 网络密度,网络实际边缘数与可能边缘数的比值
     density = nx.density(G)
 
-    # 无标度网络数据
+    # 无标度网络数据，根据人物出现频次分布和平均度数，绘制成散点图
 
     # 点度中心性，节点的度数中心性越高，意味着和该节点有关系的其他节点就越多
     degree_centrality = nx.degree(G)
@@ -49,22 +48,22 @@ def networkAnalyse(nodes: dict, edges: dict):
     # print(degree_centrality)
     for (name, degree) in degree_centrality:
         degree_centrality_dict[name] = round(degree / (node_number - 1), 3)
-    degree_centrality_dict = sorted(degree_centrality_dict.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
-    print('点度中心性:  ' + str(degree_centrality_dict))
+    degree_centrality_dict_sort = sorted(degree_centrality_dict.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    print('点度中心性:  ' + str(degree_centrality_dict_sort))
 
     # 介数中心性，即指一个节点在其他任意两点间最短路径上的个数
     betweenness_centrality = nx.betweenness_centrality(G)
     for i in betweenness_centrality:
         betweenness_centrality[i] = round(betweenness_centrality[i], 3)
-    betweenness_centrality = sorted(betweenness_centrality.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
-    print('介数中心性:  ' + str(betweenness_centrality))
+    betweenness_centrality_sorted = sorted(betweenness_centrality.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    print('介数中心性:  ' + str(betweenness_centrality_sorted))
 
     # 接近中心性，计算一个节点到其他所有的节点的平均最短距离，这个距离越小节点周围的紧密程度越高，接近中心性也就越高
     closeness_centrality = nx.closeness_centrality(G)
     for i in closeness_centrality:
         closeness_centrality[i] = round(closeness_centrality[i], 3)
-    closeness_centrality = sorted(closeness_centrality.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
-    print('接近中心性:  ' + str(closeness_centrality))
+    closeness_centrality_sort = sorted(closeness_centrality.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    print('接近中心性:  ' + str(closeness_centrality_sort))
 
     # 路径相关
     shortest_path = nx.shortest_path(G)
@@ -82,11 +81,60 @@ def networkAnalyse(nodes: dict, edges: dict):
     # 平均最短路径
     all_path_length = 0
     for i in path_distribution:
-        all_path_length += path_distribution[i]*i
-    average_shortest_path = all_path_length/sum(path_distribution.values())
+        all_path_length += path_distribution[i] * i
+    average_shortest_path = all_path_length / sum(path_distribution.values())
 
     print('路径:  ' + str(shortest_path))
     print('直径:  ' + str(diameter))
     print('最短路径分布:  ' + str(path_distribution))
     print('平均最短路径:  ' + str(average_shortest_path))
 
+
+
+    # 构建json
+    data_list = {"frequency": [], "density": [], "centrality": {}, "cluster": {}, "average_cluster": [], "path":{}, "edges": []}
+    # 挑选频次前二十组成环形图
+    sorted_nodes = sorted(nodes.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    for i in range(0,20):
+        data_list["frequency"].append({"value": sorted_nodes[i][1], "name": sorted_nodes[i][0]})
+
+    # 网络密度
+    data_list["density"] = {"value": density, "name": "网络密度"}
+
+    # 平均聚类系数
+    data_list["average_cluster"] = {"value": average_cluster, "name": "平均聚类系数"}
+
+    # 聚类系数
+    data_list["cluster"]["names"] = []
+    data_list["cluster"]["values"] = []
+    for i in cluster:
+        data_list["cluster"]["names"].append(i[0])
+        data_list["cluster"]["values"].append(i[1])
+
+    # 点度中心性
+    # 介数中心性
+    # 接近中心性
+    data_list["centrality"]["names"] = []
+    data_list["centrality"]["degree"] = []
+    data_list["centrality"]["between"] = []
+    data_list["centrality"]["closeness"] = []
+    for i in sorted_nodes:
+        data_list["centrality"]["names"].append(i[0])
+        data_list["centrality"]["degree"].append(degree_centrality_dict[i[0]])
+        data_list["centrality"]["between"].append(betweenness_centrality[i[0]])
+        data_list["centrality"]["closeness"].append(closeness_centrality[i[0]])
+
+    # 路径相关
+    data_list["path"]["names"] = []
+    data_list["path"]["dis"] = []
+    data_list["path"]["dia"] = diameter
+    data_list["path"]["shortest"] = round(average_shortest_path, 2)
+    for i in path_distribution:
+        data_list["path"]["names"].append(str(i))
+        data_list["path"]["dis"].append({})
+        data_list["path"]["dis"][i-1]["name"] = i
+        data_list["path"]["dis"][i-1]["value"] = path_distribution[i]
+
+    # 输出json
+    with open('./static/analyseData1.json', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(data_list, ensure_ascii=False))

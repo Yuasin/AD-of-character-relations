@@ -12,104 +12,180 @@
     <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
     <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
     <!--[if lt IE 9]>
-      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
     <![endif]-->
 
 </head>
 <body>
 <!--?页面布局-->
-    <!--?
-        1、引入G6进行关系图相关可视化
-        2、引入Echarts进行图静态分析数据可视化
-    -->
-    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-4.2.7/dist/g6.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.1/dist/echarts.min.js"></script>
-    <div class = "container-fluid">
-        <div class="row">
-<!--?            侧边栏：1.导航栏 2.人物关系复杂网络静态拓扑分析-->
-          <div class="col-md-4 side-bar collapse in overlay" id = "sideBar">
-<!--?              侧标栏导航栏-->
-              <div class="masthead clearfix">
+<!--?
+    1、引入G6进行关系图相关可视化
+    2、引入Echarts进行图静态分析数据可视化
+-->
+<script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-4.2.7/dist/g6.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.1.1/dist/echarts.min.js"></script>
+<div class="container-fluid">
+    <div class="row">
+        <!--?            侧边栏：1.导航栏 2.人物关系复杂网络静态拓扑分析-->
+        <div class="col-md-4 side-bar collapse in overlay" id="sideBar" >
+            <!--?              侧标栏导航栏-->
+            <div class="masthead clearfix">
                 <div class="inner">
-                  <nav>
-                    <ul class="nav masthead-nav">
-                      <li class="active"><a href="/">主页</a></li>
-                      <li><a href="/">查看更多</a></li>
-                      <li><a href="https://github.com/Yuasin/GP">Github</a></li>
-                    </ul>
-                  </nav>
+                    <nav>
+                        <ul class="nav masthead-nav">
+                            <li class="active"><a href="/">主页</a></li>
+                            <li><a href="/">查看更多</a></li>
+                            <li><a href="https://github.com/Yuasin/GP">Github</a></li>
+                        </ul>
+                    </nav>
                 </div>
-              </div>
+            </div>
 
-<!--?              各类信息面板-->
-              <div class="panel panel-primary">
+            <!--?              各类信息面板-->
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <a data-toggle="collapse" data-target="#accordion">
-                        网络基本信息
+                            人物出现频次
                         </a>
                     </h3>
                 </div>
-                  <div id="accordion" class="panel-collapse collapse in">
-                      <div class="panel-body">
-                          abc
-                      </div>
+                <div id="accordion" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="frequency" style="width: 550px;height:500px;margin-bottom: -50px; padding-right: 20px"></div>
+                        <div style="text-align: center">
+                            <a>环形图只展示人物出现频次排名前20的人物</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
+            </div>
 
-              <div class="panel panel-success">
+            <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <a data-toggle="collapse" data-target="#accordion2">
-                        网络基本信息
+                            网络密度
                         </a>
                     </h3>
                 </div>
-                  <div id="accordion2" class="panel-collapse collapse in">
-                      <div class="panel-body">
-
-                      </div>
+                <div id="accordion2" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="density" style="width: 500px;height:500px;margin-bottom: -200px"></div>
+                        <div style="text-align: center">
+                            <a>网络密度反应网络中实际连边数与可能连边数的比值</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
+            </div>
 
-              <div class="panel panel-info">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <a data-toggle="collapse" data-target="#accordion3">
-                        网络基本信息
+                            中心性相关
                         </a>
                     </h3>
                 </div>
-                  <div id="accordion3" class="panel-collapse collapse in">
-                      <div class="panel-body">
-                          abc
-                      </div>
+                <div id="accordion3" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="centrality" style="width: 500px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: left; font-size: 5px" >
+                            <a>点度中心性，节点的度数中心性越高，意味着和该节点有关系的其他节点就越多</a><p></p>
+                            <a>介数中心性，即指一个节点在其他任意两点间最短路径上的个数,数值越高则桥梁性越强</a><p></p>
+                            <a>接近中心性，计算一个节点到其他所有的节点的平均最短距离，这个距离越小节点周围的紧密程度越高，接近中心性也就越高</a><p></p>
+                        </div>
+                    </div>
                 </div>
-              </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordion4">
+                            聚类系数
+                        </a>
+                    </h3>
+                </div>
+                <div id="accordion4" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="cluster" style="width: 500px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: center; font-size: 5px" >
+                            <a>聚类系数为节点的邻接节点实际边数和总的可能边数的比值，数值越大邻接节点聚集程度越高</a><p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordion5">
+                            平均聚类系数
+                        </a>
+                    </h3>
+                </div>
+                <div id="accordion5" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="average-cluster" style="width: 500px;height:500px;margin-bottom: -200px"></div>
+                        <div style="text-align: center">
+                            <a>平均聚类系数反应网络中节点的聚集程度</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordion6">
+                            路径相关
+                        </a>
+                    </h3>
+                </div>
+                <div id="accordion6" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="path" style="width: 500px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: center;" >
+                            <a>最短路径统计为每两个节点间最短路径的距离数量统计</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-          </div>
-<!--?            网络栏：1.人物关系网络 2.网络关系布局选项、聚类选项、交互模式选择（查看相连结点）、时间轴选择-->
-          <div class="col-md-8" style="padding-left: 0">
-              <button type="button" class="btn btn-primary hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
-                  <span class="fas fa-align-left"></span>
-              </button>
-            <div id="mountNode"></div>
-          </div>
+        </div>
+
+        <!--?            网络栏：1.人物关系网络 2.网络关系布局选项、聚类选项、交互模式选择（查看相连结点）、时间轴选择-->
+        <div class="col-md-8" style="padding-left: 0">
+            <button type="button" class="btn btn-primary hamburger is-closed animated fadeInLeft"
+                    data-toggle="offcanvas">
+                <span class="fas fa-align-left"></span>
+            </button>
+<!--?            关系图网络容器 mountNode-->
+            <div id="mountNode">
+<!--?                控制面板容器-->
+                <div class="panel-body" id="control" style="background-color: #999999; position: fixed; height: 500px; width: 300px; right: 0px; bottom: 0px">
+
+                </div>
+            </div>
+
+
+
         </div>
     </div>
+</div>
 
-    <!--? 控制台信息-->
-    <script>
-      console.log(G6.Global.version);
-    </script>
+<!--? 控制台信息-->
+<script>
+    console.log(G6.Global.version);
+</script>
 
 
-    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 
 </body>
 
@@ -117,10 +193,11 @@
     1、引入路径查找js，函数findPath(graph,data)
     2、引入侧标栏消失功能
 -->
-<script src = "./static/findPath.js"></script>
+<script src="./static/findPath.js"></script>
 <script src="./static/sidebar.js"></script>
+<script src="./static/analyseEchart.js"></script>
 <script>
-     // src="{{ url_for('static', filename='node_modules/@antv/vis-predict-engine/dist/index.esm.js') }}"
+    // src="{{ url_for('static', filename='node_modules/@antv/vis-predict-engine/dist/index.esm.js') }}"
     // const tooltip = new G6.Tooltip({
     //   offsetX: 10,
     //   offsetY: 10,
@@ -146,26 +223,26 @@
     //   },
     // });
 
-    const { louvain } = G6.Algorithm;
+    const {louvain} = G6.Algorithm;
 
     const button = document.createElement('button');
     button.innerHTML = `Click Here to Clustering 点此自动聚类`;
-    document.getElementById('mountNode').appendChild(button);
+    document.getElementById('control').appendChild(button);
     const buttonFindPath = document.createElement('button');
     buttonFindPath.innerHTML = `查看最短路径`;
-    document.getElementById('mountNode').appendChild(buttonFindPath);
+    document.getElementById('control').appendChild(buttonFindPath);
 
     const subjectColors = [
-      '#5F95FF', // blue
-      '#61DDAA',
-      '#65789B',
-      '#F6BD16',
-      '#7262FD',
-      '#78D3F8',
-      '#9661BC',
-      '#F6903D',
-      '#008685',
-      '#F08BB4',
+        '#5F95FF', // blue
+        '#61DDAA',
+        '#65789B',
+        '#F6BD16',
+        '#7262FD',
+        '#78D3F8',
+        '#9661BC',
+        '#F6903D',
+        '#008685',
+        '#F08BB4',
     ];
     const colorSets = G6.Util.getColorSetsBySubjectColors(subjectColors, '#fff', 'default', '#777');
 
@@ -179,16 +256,16 @@
         // plugins: [tooltip],
         modes: {
             default: ['click-select', 'drag-canvas', 'zoom-canvas', 'drag-node', 'activate-relations'], // 允许拖拽画布、放缩画布、拖拽节点,
-          },
-        defaultNode:{
-          //  结点标签属性
-          labelCfg:{
-              position: 'bottom',
-              offset: 3,
-              style: {
-                  fontSize: 6
-              },
-          }
+        },
+        defaultNode: {
+            //  结点标签属性
+            labelCfg: {
+                position: 'bottom',
+                offset: 3,
+                style: {
+                    fontSize: 6
+                },
+            }
         },
         layout: {
             type: 'fruchterman',
@@ -200,65 +277,63 @@
             maxIteration: 2000, // 可选，迭代次数
             workerEnabled: true, // 可选，开启 web-worker
             gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
-          },
-      });
+        },
+    });
 
     //布局类型
     const layoutF = {
-            type: 'fruchterman',
-            center: [200, 200], // 可选，默认为图的中心
-            gravity: 1, // 可选
-            speed: 2, // 可选
-            clustering: true, // 可选
-            clusterGravity: 40, // 可选
-            maxIteration: 2000, // 可选，迭代次数
-            workerEnabled: true, // 可选，开启 web-worker
-            gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
-          };
+        type: 'fruchterman',
+        center: [200, 200], // 可选，默认为图的中心
+        gravity: 1, // 可选
+        speed: 2, // 可选
+        clustering: true, // 可选
+        clusterGravity: 40, // 可选
+        maxIteration: 2000, // 可选，迭代次数
+        workerEnabled: true, // 可选，开启 web-worker
+        gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+    };
 
     fetch('./static/data2weight.json')
-      .then((res) => res.json())
-      .then((data) => {
-        const clearStates = () => {
-            graph.getNodes().forEach((node) => {
-                graph.clearItemStates(node);
-                });
-            graph.getEdges().forEach((edge) => {
-                graph.clearItemStates(edge);
-                });
-        };
-        graph.data(data);
-        graph.render();
+            .then((res) => res.json())
+            .then((data) => {
+                const clearStates = () => {
+                    graph.getNodes().forEach((node) => {
+                        graph.clearItemStates(node);
+                    });
+                    graph.getEdges().forEach((edge) => {
+                        graph.clearItemStates(edge);
+                    });
+                };
+                graph.data(data);
+                graph.render();
 
-        // 查找最短路径
-        findPath(graph,data)
+                // 查找最短路径
+                findPath(graph, data)
 
-        button.addEventListener('click', (e) => {
-          const clusteredData = louvain(data, false);
-            console.log(clusteredData)
-          clusteredData.clusters.forEach((cluster, i) => {
-            const colorSet = colorSets[i % colorSets.length];
-            cluster.nodes.forEach((node) => {
-                const model = graph.findById(node.id).getModel();
-                model.style.fill = colorSet.mainFill
-                model.style.stroke = colorSet.mainStroke
-                data.nodes[node.id].cluster = i   //聚类算法后节点内自带聚类信息
+                button.addEventListener('click', (e) => {
+                    const clusteredData = louvain(data, false);
+                    console.log(clusteredData)
+                    clusteredData.clusters.forEach((cluster, i) => {
+                        const colorSet = colorSets[i % colorSets.length];
+                        cluster.nodes.forEach((node) => {
+                            const model = graph.findById(node.id).getModel();
+                            model.style.fill = colorSet.mainFill
+                            model.style.stroke = colorSet.mainStroke
+                            data.nodes[node.id].cluster = i   //聚类算法后节点内自带聚类信息
+                        });
+                    });
+                    graph.refresh();
+                    graph.updateLayout(layoutF);
+                });
             });
-          });
-          graph.refresh();
-          graph.updateLayout(layoutF);
-        });
-      });
-
-
 
 
     if (typeof window !== 'undefined')
-      window.onresize = () => {
-        if (!graph || graph.get('destroyed')) return;
-        if (!container || !container.scrollWidth || !container.scrollHeight) return;
-        graph.changeSize(container.scrollWidth, container.scrollHeight - 20);
-      };
+        window.onresize = () => {
+            if (!graph || graph.get('destroyed')) return;
+            if (!container || !container.scrollWidth || !container.scrollHeight) return;
+            graph.changeSize(container.scrollWidth, container.scrollHeight - 20);
+        };
     // const main = async () => {
     //     const response = await fetch(
     //         './static/data2weight.json',
