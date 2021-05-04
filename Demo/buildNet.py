@@ -1,6 +1,7 @@
 import txtTest
 from buildJson import buildJson
 from analysis.network import networkAnalyse
+from analysis.hierarchyCluster import cluster_hierarchy
 
 # 获取分段过的语料文件
 all_section = txtTest.getSection("../corpus4.txt")
@@ -42,5 +43,6 @@ for cur_section in all_section:
 
 # print(all_name)
 # print(adjacency_list)
-buildJson(all_name, adjacency_list)
+combo_label, sorted_names = cluster_hierarchy(all_name,adjacency_list)
+buildJson(all_name, adjacency_list, combo_label, sorted_names)
 networkAnalyse(all_name, adjacency_list)

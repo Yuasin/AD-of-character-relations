@@ -28,7 +28,7 @@
 <div class="container-fluid">
     <div class="row">
         <!--?            侧边栏：1.导航栏 2.人物关系复杂网络静态拓扑分析-->
-        <div class="col-md-4 side-bar collapse in overlay" id="sideBar" >
+        <div class="col-md-6 side-bar collapse in overlay" id="sideBar">
             <!--?              侧标栏导航栏-->
             <div class="masthead clearfix">
                 <div class="inner">
@@ -53,7 +53,8 @@
                 </div>
                 <div id="accordion" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div id="frequency" style="width: 550px;height:500px;margin-bottom: -50px; padding-right: 20px"></div>
+                        <div id="frequency"
+                             style="width: 850px;height:500px;margin-bottom: -50px; padding-right: 20px"></div>
                         <div style="text-align: center">
                             <a>环形图只展示人物出现频次排名前20的人物</a>
                         </div>
@@ -71,7 +72,7 @@
                 </div>
                 <div id="accordion2" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div id="density" style="width: 500px;height:500px;margin-bottom: -200px"></div>
+                        <div id="density" style="width: 800px;height:500px;margin-bottom: -200px"></div>
                         <div style="text-align: center">
                             <a>网络密度反应网络中实际连边数与可能连边数的比值</a>
                         </div>
@@ -83,17 +84,70 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <a data-toggle="collapse" data-target="#accordion3">
-                            中心性相关
+                            中心性集合
                         </a>
                     </h3>
                 </div>
                 <div id="accordion3" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div id="centrality" style="width: 500px;height:500px;margin-bottom: 0px"></div>
-                        <div style="text-align: left; font-size: 5px" >
-                            <a>点度中心性，节点的度数中心性越高，意味着和该节点有关系的其他节点就越多</a><p></p>
-                            <a>介数中心性，即指一个节点在其他任意两点间最短路径上的个数,数值越高则桥梁性越强</a><p></p>
-                            <a>接近中心性，计算一个节点到其他所有的节点的平均最短距离，这个距离越小节点周围的紧密程度越高，接近中心性也就越高</a><p></p>
+                        <div id="centrality" style="width: 800px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: left; font-size: 5px">
+                            <a>点度中心性，节点的度数中心性越高，意味着和该节点有关系的其他节点就越多</a>
+                            <p></p>
+                            <a>介数中心性，即指一个节点在其他任意两点间最短路径上的个数,数值越高则桥梁性越强</a>
+                            <p></p>
+                            <a>接近中心性，计算一个节点到其他所有的节点的平均最短距离，这个距离越小节点周围的紧密程度越高，接近中心性也就越高</a>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordiond">
+                            点度中心性
+                        </a>
+                    </h3>
+                </div>
+                <div id="accordiond" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="degree" style="width: 800px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: left; font-size: 5px">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordionb">
+                            介数中心性
+                        </a>
+                    </h3>
+                </div>
+                <div id="accordionb" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="between" style="width: 800px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: left; font-size: 5px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" data-target="#accordionc">
+                            接近中心性
+                        </a>
+                    </h3>
+                </div>
+                <div id="accordionc" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="closeness" style="width: 800px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: left; font-size: 5px">
                         </div>
                     </div>
                 </div>
@@ -109,9 +163,10 @@
                 </div>
                 <div id="accordion4" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div id="cluster" style="width: 500px;height:500px;margin-bottom: 0px"></div>
-                        <div style="text-align: center; font-size: 5px" >
-                            <a>聚类系数为节点的邻接节点实际边数和总的可能边数的比值，数值越大邻接节点聚集程度越高</a><p></p>
+                        <div id="cluster" style="width: 800px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: center; font-size: 5px">
+                            <a>聚类系数为节点的邻接节点实际边数和总的可能边数的比值，数值越大邻接节点聚集程度越高</a>
+                            <p></p>
                         </div>
                     </div>
                 </div>
@@ -127,7 +182,7 @@
                 </div>
                 <div id="accordion5" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div id="average-cluster" style="width: 500px;height:500px;margin-bottom: -200px"></div>
+                        <div id="average-cluster" style="width: 800px;height:500px;margin-bottom: -200px"></div>
                         <div style="text-align: center">
                             <a>平均聚类系数反应网络中节点的聚集程度</a>
                         </div>
@@ -145,8 +200,8 @@
                 </div>
                 <div id="accordion6" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <div id="path" style="width: 500px;height:500px;margin-bottom: 0px"></div>
-                        <div style="text-align: center;" >
+                        <div id="path" style="width: 800px;height:500px;margin-bottom: 0px"></div>
+                        <div style="text-align: center;">
                             <a>最短路径统计为每两个节点间最短路径的距离数量统计</a>
                         </div>
                     </div>
@@ -157,19 +212,19 @@
         </div>
 
         <!--?            网络栏：1.人物关系网络 2.网络关系布局选项、聚类选项、交互模式选择（查看相连结点）、时间轴选择-->
-        <div class="col-md-8" style="padding-left: 0">
+        <div class="col-md-6" style="padding-left: 0">
             <button type="button" class="btn btn-primary hamburger is-closed animated fadeInLeft"
                     data-toggle="offcanvas">
                 <span class="fas fa-align-left"></span>
             </button>
-<!--?            关系图网络容器 mountNode-->
+            <!--?            关系图网络容器 mountNode-->
             <div id="mountNode">
-<!--?                控制面板容器-->
-                <div class="panel-body" id="control" style="background-color: #999999; position: fixed; height: 500px; width: 300px; right: 0px; bottom: 0px">
-
+                <!--?                控制面板容器-->
+                <div class="panel-body control-panel" id="control">
+                    <button class="btn btn-primary btn-block" id="hierarchy">层次聚类</button>
+                    <button class="btn btn-success btn-block">abc</button>
                 </div>
             </div>
-
 
 
         </div>
@@ -232,6 +287,8 @@
     buttonFindPath.innerHTML = `查看最短路径`;
     document.getElementById('control').appendChild(buttonFindPath);
 
+    const hierarchybutton = document.getElementById('hierarchy')
+
     const subjectColors = [
         '#5F95FF', // blue
         '#61DDAA',
@@ -256,6 +313,11 @@
         // plugins: [tooltip],
         modes: {
             default: ['click-select', 'drag-canvas', 'zoom-canvas', 'drag-node', 'activate-relations'], // 允许拖拽画布、放缩画布、拖拽节点,
+        },
+        // groupByTypes: false,
+        defaultCombo: {
+            type: 'circle',
+            // 其他配置
         },
         defaultNode: {
             //  结点标签属性
@@ -293,6 +355,20 @@
         gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
     };
 
+    const layoutCombo = {
+        type: 'comboForce',
+        center: [200, 200],     // 可选，默认为图的中心
+        linkDistance: 50,         // 可选，边长
+        nodeStrength: 30,         // 可选
+        edgeStrength: 0.1,        // 可选
+        onTick: () => {           // 可选
+            console.log('ticking');
+        },
+        onLayoutEnd: () => {      // 可选
+            console.log('combo force layout done');
+        }
+    };
+
     fetch('./static/data2weight.json')
             .then((res) => res.json())
             .then((data) => {
@@ -312,7 +388,7 @@
 
                 button.addEventListener('click', (e) => {
                     const clusteredData = louvain(data, false);
-                    console.log(clusteredData)
+                    // console.log(clusteredData)
                     clusteredData.clusters.forEach((cluster, i) => {
                         const colorSet = colorSets[i % colorSets.length];
                         cluster.nodes.forEach((node) => {
@@ -325,15 +401,21 @@
                     graph.refresh();
                     graph.updateLayout(layoutF);
                 });
+
+                hierarchybutton.addEventListener('click', (e) => {
+                    // graph.refresh();
+                    graph.updateLayout(layoutCombo);
+                    graph.render();
+                });
             });
 
 
-    if (typeof window !== 'undefined')
-        window.onresize = () => {
-            if (!graph || graph.get('destroyed')) return;
-            if (!container || !container.scrollWidth || !container.scrollHeight) return;
-            graph.changeSize(container.scrollWidth, container.scrollHeight - 20);
-        };
+    // if (typeof window !== 'undefined')
+    //     window.onresize = () => {
+    //         if (!graph || graph.get('destroyed')) return;
+    //         if (!container || !container.scrollWidth || !container.scrollHeight) return;
+    //         graph.changeSize(container.scrollWidth, container.scrollHeight - 20);
+    //     };
     // const main = async () => {
     //     const response = await fetch(
     //         './static/data2weight.json',

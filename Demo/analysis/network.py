@@ -1,5 +1,6 @@
 import networkx as nx
 import json
+from analysis.hierarchyCluster import pinyin
 
 
 def networkAnalyse(nodes: dict, edges: dict):
@@ -89,13 +90,12 @@ def networkAnalyse(nodes: dict, edges: dict):
     print('最短路径分布:  ' + str(path_distribution))
     print('平均最短路径:  ' + str(average_shortest_path))
 
-
-
     # 构建json
-    data_list = {"frequency": [], "density": [], "centrality": {}, "cluster": {}, "average_cluster": [], "path":{}, "edges": []}
+    data_list = {"frequency": [], "density": [], "centrality": {}, "degree": {}, "between": {}, "closeness": {},
+                 "cluster": {}, "average_cluster": [], "path": {}, "edges": []}
     # 挑选频次前二十组成环形图
     sorted_nodes = sorted(nodes.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
-    for i in range(0,20):
+    for i in range(0, 20):
         data_list["frequency"].append({"value": sorted_nodes[i][1], "name": sorted_nodes[i][0]})
 
     # 网络密度
@@ -106,15 +106,18 @@ def networkAnalyse(nodes: dict, edges: dict):
 
     # 聚类系数
     data_list["cluster"]["names"] = []
+    data_list["cluster"]["pinyinnames"] = []
     data_list["cluster"]["values"] = []
     for i in cluster:
         data_list["cluster"]["names"].append(i[0])
         data_list["cluster"]["values"].append(i[1])
+    data_list["cluster"]["pinyinnames"] = pinyin(data_list["cluster"]["names"])
 
     # 点度中心性
     # 介数中心性
     # 接近中心性
     data_list["centrality"]["names"] = []
+    data_list["centrality"]["pinyinnames"] = []
     data_list["centrality"]["degree"] = []
     data_list["centrality"]["between"] = []
     data_list["centrality"]["closeness"] = []
@@ -123,6 +126,31 @@ def networkAnalyse(nodes: dict, edges: dict):
         data_list["centrality"]["degree"].append(degree_centrality_dict[i[0]])
         data_list["centrality"]["between"].append(betweenness_centrality[i[0]])
         data_list["centrality"]["closeness"].append(closeness_centrality[i[0]])
+    data_list["centrality"]["pinyinnames"] = pinyin(data_list["centrality"]["names"])
+
+    data_list["degree"]["data"] = []
+    data_list["degree"]["name"] = []
+    data_list["degree"]["pinyinname"] = []
+    for i in degree_centrality_dict_sort:
+        data_list["degree"]["data"].append(i[1])
+        data_list["degree"]["name"].append(i[0])
+    data_list["degree"]["pinyinname"] = pinyin(data_list["degree"]["name"])
+
+    data_list["between"]["data"] = []
+    data_list["between"]["name"] = []
+    data_list["between"]["pinyinname"] = []
+    for i in betweenness_centrality_sorted:
+        data_list["between"]["data"].append(i[1])
+        data_list["between"]["name"].append(i[0])
+    data_list["between"]["pinyinname"] = pinyin(data_list["between"]["name"])
+
+    data_list["closeness"]["data"] = []
+    data_list["closeness"]["name"] = []
+    data_list["closeness"]["pinyinname"] = []
+    for i in closeness_centrality_sort:
+        data_list["closeness"]["data"].append(i[1])
+        data_list["closeness"]["name"].append(i[0])
+    data_list["closeness"]["pinyinname"] = pinyin(data_list["closeness"]["name"])
 
     # 路径相关
     data_list["path"]["names"] = []
@@ -132,8 +160,8 @@ def networkAnalyse(nodes: dict, edges: dict):
     for i in path_distribution:
         data_list["path"]["names"].append(str(i))
         data_list["path"]["dis"].append({})
-        data_list["path"]["dis"][i-1]["name"] = i
-        data_list["path"]["dis"][i-1]["value"] = path_distribution[i]
+        data_list["path"]["dis"][i - 1]["name"] = i
+        data_list["path"]["dis"][i - 1]["value"] = path_distribution[i]
 
     # 输出json
     with open('./static/analyseData1.json', 'w', encoding='utf-8') as f:

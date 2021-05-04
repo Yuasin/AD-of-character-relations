@@ -160,13 +160,28 @@ fetch('./static/analyseData1.json')
             xAxis: [
                 {
                     type: 'category',
-                    data: data.centrality.names
+                    data: data.centrality.names,
+                    position: "top"
+                },
+                {
+                    type: 'category',
+                    data: data.centrality.pinyinnames,
+                    axisLabel: {
+                        show: true,
+                        rotate: 40,
+                        textStyle: {
+                            color: 'blue',
+                            fontFamily: 'sans-serif',
+                            fontSize: 12,
+                            fontStyle: 'italic',
+                            fontWeight: 'bold'
+                        }
+                    }
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '三种中心性',
                     axisLabel: {
                         formatter: function (a) {
                             a = +a;
@@ -218,6 +233,151 @@ fetch('./static/analyseData1.json')
         };
         centrality_option && centrality_myChart.setOption(centrality_option);
 
+        //点度中心性
+        var degree_myChart = echarts.init(document.getElementById('degree'));
+        var degree_option;
+
+        degree_option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true
+                    }
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                data: data.degree.name,
+                position: "top"
+            }, {
+                type: 'category',
+                data: data.degree.pinyinname,
+                axisLabel: {
+                    show: true,
+                    rotate: 40,
+                    textStyle: {
+                        color: 'blue',
+                        fontFamily: 'sans-serif',
+                        fontSize: 10,
+                        fontStyle: 'italic',
+                        fontWeight: 'bold'
+                    }
+                }
+            }
+            ],
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: data.degree.data,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                }
+            }]
+        };
+        degree_option && degree_myChart.setOption(degree_option);
+
+        //介数中心性
+        var between_myChart = echarts.init(document.getElementById('between'));
+        var between_option;
+
+        between_option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true
+                    }
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                data: data.between.name,
+                position: "top"
+            }, {
+                type: 'category',
+                data: data.between.pinyinname,
+                axisLabel: {
+                    show: true,
+                    rotate: 40,
+                    textStyle: {
+                        color: 'blue',
+                        fontFamily: 'sans-serif',
+                        fontSize: 10,
+                        fontStyle: 'italic',
+                        fontWeight: 'bold'
+                    }
+                }
+            }
+            ],
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: data.between.data,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                }
+            }]
+        };
+        between_option && between_myChart.setOption(between_option);
+
+        //接近中心性
+        var closeness_myChart = echarts.init(document.getElementById('closeness'));
+        var closeness_option;
+
+        closeness_option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true
+                    }
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                data: data.closeness.name,
+                position: "top"
+            }, {
+                type: 'category',
+                data: data.closeness.pinyinname,
+                axisLabel: {
+                    show: true,
+                    rotate: 40,
+                    textStyle: {
+                        color: 'blue',
+                        fontFamily: 'sans-serif',
+                        fontSize: 10,
+                        fontStyle: 'italic',
+                        fontWeight: 'bold'
+                    }
+                }
+            }
+            ],
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: data.closeness.data,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(180, 180, 180, 0.2)'
+                }
+            }]
+        };
+        closeness_option && closeness_myChart.setOption(closeness_option);
+
+
         //聚类系数柱状图
         var cluster_myChart = echarts.init(document.getElementById('cluster'));
         var cluster_option;
@@ -242,19 +402,31 @@ fetch('./static/analyseData1.json')
                     saveAsImage: {show: true}
                 }
             },
-            xAxis: {
+            xAxis: [{
                 type: 'category',
-                data: data.cluster.names
-            },
+                data: data.cluster.names,
+                position: "top"
+            }, {
+                type: 'category',
+                data: data.cluster.pinyinnames,
+                axisLabel: {
+                    show: true,
+                    rotate: 40,
+                    textStyle: {
+                        color: 'blue',
+                        fontFamily: 'sans-serif',
+                        fontSize: 10,
+                        fontStyle: 'italic',
+                        fontWeight: 'bold'
+                    }
+                }
+            }
+            ],
             yAxis: {
-                type: 'value'
+                type: 'value',
+                max: 1.2
             },
             dataZoom: [
-                {
-                    show: true,
-                    start: 94,
-                    end: 100
-                },
                 {
                     type: 'inside',
                     start: 94,
@@ -268,6 +440,13 @@ fetch('./static/analyseData1.json')
                     height: '80%',
                     showDataShadow: false,
                     left: '93%'
+                },
+                {
+                    show: false,
+                    xAxisIndex: 0,
+                    filterMode: 'empty',
+                    height: 15,
+                    top: '96%'
                 }
             ],
             series: [{
@@ -375,23 +554,23 @@ fetch('./static/analyseData1.json')
                     name: '距离',
                     type: 'pie',
                     selectedMode: 'single',
-                    radius: [0, '45%'],
+                    radius: [0, '40%'],
                     label: {
                         position: 'inner',
-                        fontSize: 14,
+                        fontSize: 12,
                     },
                     labelLine: {
                         show: true
                     },
                     data: [
-                        {value: 10, name: '直径: \n\n'+data.path.dia},
-                        {value: 10, name: '平均最短路径: \n\n'+data.path.shortest},
+                        {value: 10, name: '直径:\n\n' + data.path.dia},
+                        {value: 10, name: '平均最短路径:\n\n' + data.path.shortest},
                     ]
                 },
                 {
                     name: '最短路径统计',
                     type: 'pie',
-                    radius: ['50%', '60%'],
+                    radius: ['45%', '55%'],
                     labelLine: {
                         length: 18,
                     },
