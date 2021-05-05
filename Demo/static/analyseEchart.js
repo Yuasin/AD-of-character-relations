@@ -247,13 +247,23 @@ fetch('./static/analyseData1.json')
                     }
                 }
             },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
             xAxis: [{
                 type: 'category',
-                data: data.degree.name,
+                data: data.degree.pinyinname,
                 position: "top"
             }, {
                 type: 'category',
-                data: data.degree.pinyinname,
+                data: data.degree.name,
                 axisLabel: {
                     show: true,
                     rotate: 40,
@@ -295,13 +305,23 @@ fetch('./static/analyseData1.json')
                     }
                 }
             },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
             xAxis: [{
                 type: 'category',
-                data: data.between.name,
+                data: data.between.pinyinname,
                 position: "top"
             }, {
                 type: 'category',
-                data: data.between.pinyinname,
+                data: data.between.name,
                 axisLabel: {
                     show: true,
                     rotate: 40,
@@ -343,13 +363,23 @@ fetch('./static/analyseData1.json')
                     }
                 }
             },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
             xAxis: [{
                 type: 'category',
-                data: data.closeness.name,
+                data: data.closeness.pinyinname,
                 position: "top"
             }, {
                 type: 'category',
-                data: data.closeness.pinyinname,
+                data: data.closeness.name,
                 axisLabel: {
                     show: true,
                     rotate: 40,
