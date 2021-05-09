@@ -309,14 +309,21 @@
         height: 1200,
         linkCenter: true,
         fitView: true,
-        fitViewPadding: [20, 40, 50, 20],
+        fitViewPadding: 50,
+        minZoom: 0.00000001,
         // plugins: [tooltip],
         modes: {
-            default: ['click-select', 'drag-canvas', 'zoom-canvas', 'drag-node', 'activate-relations'], // 允许拖拽画布、放缩画布、拖拽节点,
+            default: ['click-select', 'drag-canvas', 'zoom-canvas', 'drag-node', 'activate-relations',
+                {
+                    type: 'drag-combo',
+                    onlyChangeComboSize: true,
+                },], // 允许拖拽画布、放缩画布、拖拽节点,
         },
         // groupByTypes: false,
         defaultCombo: {
-            type: 'circle',
+            type: 'rect',
+            padding: 10,
+
             // 其他配置
         },
         defaultNode: {
@@ -330,16 +337,36 @@
             }
         },
         layout: {
-            type: 'fruchterman',
-            center: [200, 200], // 可选，默认为图的中心
-            gravity: 1, // 可选
-            speed: 2, // 可选
-            clustering: true, // 可选
-            clusterGravity: 30, // 可选
-            maxIteration: 2000, // 可选，迭代次数
-            workerEnabled: true, // 可选，开启 web-worker
-            gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+            type: 'comboForce',
+            center: [200, 200],     // 可选，默认为图的中心
+            linkDistance: 10,         // 可选，边长
+            nodeStrength: 100,         // 可选
+            edgeStrength: 0.1,        // 可选
+            gravity: 0.01, //影响布局的紧凑程度，越小布局越不容易重叠
+            // preventComboOverlap: true,
+            comboCollideStrength: 1,
+            comboSpacing: (d) => {
+                // d is a combo
+                return 1000;
+            },
+            onTick: () => {           // 可选
+                console.log('ticking');
+            },
+            onLayoutEnd: () => {      // 可选
+                console.log('combo force layout done');
+            }
         },
+        // layout: {
+        //     type: 'fruchterman',
+        //     center: [200, 200], // 可选，默认为图的中心
+        //     gravity: 1, // 可选
+        //     speed: 2, // 可选
+        //     clustering: true, // 可选
+        //     clusterGravity: 30, // 可选
+        //     maxIteration: 2000, // 可选，迭代次数
+        //     workerEnabled: true, // 可选，开启 web-worker
+        //     gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+        // },
     });
 
     //布局类型
@@ -380,8 +407,27 @@
                         graph.clearItemStates(edge);
                     });
                 };
+                graph.combo((combo) => {
+                    const colorSet = colorSets[parseInt(combo.id.replace("combo", "")) % colorSets.length]
+                    return {
+                        id: combo.id,
+                        style: {
+                            fill: colorSet.mainFill,
+                            fillOpacity: 10,
+                        },
+                    };
+                });
                 graph.data(data);
                 graph.render();
+
+                graph.on('combo:mouseenter', (evt) => {
+                    const {item} = evt;
+                    graph.setItemState(item, 'active', false);
+                });
+                graph.on('combo:mouseleaver', (evt) => {
+                    const {item} = evt;
+                    graph.setItemState(item, 'active', false);
+                });
 
                 // 查找最短路径
                 findPath(graph, data)

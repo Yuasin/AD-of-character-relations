@@ -42,6 +42,7 @@ def networkAnalyse(nodes: dict, edges: dict):
     density = nx.density(G)
 
     # 无标度网络数据，根据人物出现频次分布和平均度数，绘制成散点图
+    print(nx.degree_histogram(G))
 
     # 点度中心性，节点的度数中心性越高，意味着和该节点有关系的其他节点就越多
     degree_centrality = nx.degree(G)
