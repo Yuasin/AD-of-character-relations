@@ -45,7 +45,7 @@ def buildJson(nodes: dict, edges: dict, combos_tree:TreeNode, labels=None):
     nodes_sorted = sorted(nodes.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
     rank = 0
     for i in nodes_sorted:
-        print(i[0])
+        # print(i[0])
         data_list["nodes"][id_node[i[0]]]["comboId"] = "combo" + str(labels[rank])
         rank += 1
 
