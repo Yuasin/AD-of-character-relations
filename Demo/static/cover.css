@@ -19,6 +19,26 @@ a:hover {
   border: 1px solid #fff;
 }
 
+/*
+ Form 表单中标签样式
+*/
+/*label{*/
+/*  text-align: center;*/
+/*  margin-bottom: 7px;*/
+/*}*/
+/*.help-block{*/
+/*  float: left;*/
+/*  margin-bottom: 3px;*/
+/*}*/
+.form-group{
+margin-bottom: 25px;
+}
+/*input{*/
+/*  float: left;*/
+/*}*/
+
+
+
 
 /*
  * Base structure
@@ -161,3 +181,4 @@ body {
     width: 700px;
   }
 }
+

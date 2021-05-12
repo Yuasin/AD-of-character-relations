@@ -29,8 +29,9 @@ def show_example(name=None):
 
 @app.route('/more', methods=['GET'])
 def look_more():
-
-    return render_template('morebook.html')
+    all_book = os.listdir(app.config['UPLOAD_FOLDER'])
+    print(all_book)
+    return render_template('morebook.html', test = all_book)
 
 
 @app.route('/more', methods=['POST'])
