@@ -20,12 +20,19 @@ def hello():
     return send_file('templates/main.html')
 
 
+# 展示射雕英雄传
 @app.route('/CondorHeroes')
 def show_example(name=None):
     global all_name
     print("修改后全局变量" + str(all_name))
     return render_template('example.html', name=name)
 
+# 指定展示特定的书籍
+@app.route('/book<name>')
+def look_book(name=None):
+    buildNet(name)
+    # print("名字"+name)
+    return render_template('example.html', name=name)
 
 @app.route('/more', methods=['GET'])
 def look_more():
@@ -70,5 +77,5 @@ if __name__ == '__main__':
     # 全局变量
     all_name = {}
     adjacency_list = {}
-    all_name, adjacency_list = buildNet()
+    all_name, adjacency_list = buildNet('CondorHeroes')
     app.run(debug='true')

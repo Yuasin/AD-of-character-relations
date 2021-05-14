@@ -37,10 +37,13 @@
             </div>
 
             <div class="inner cover">
+                <h2>目前作品</h2>
                 {% for book in test %}
-                <li>{{ book }}</li>
+                <a class="btn btn-lg btn-default" href="book{{ book }}">{{ book }}<a/><p></p>
                 {% endfor %}
-                <h3>新增书籍</h3>
+
+
+                <h3>新增作品</h3>
                 <form method=post enctype=multipart/form-data style="text-align: left;">
                     <div class="form-group">
                         <label for="bookname" style="left: 0px">书名</label>

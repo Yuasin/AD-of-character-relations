@@ -1,17 +1,17 @@
-import txtTest
+from analysis.processCorpus import getSection
 from analysis.buildJson import buildJson
 from analysis.network import networkAnalyse
 from analysis.hierarchyCluster import cluster_hierarchy
 
-def buildNet():
+def buildNet(name:str):
     # 获取分段过的语料文件
     # all_section = txtTest.getSection("../corpus4.txt")
-    all_section = txtTest.getSection("../corpus4.txt")
+    all_section = getSection("./static/book/"+name+"/corpus.txt")
 
     # 读入人物列表，去除人物列表头尾的空白
     all_name = {}
     adjacency_list = {}
-    with open('Name.txt') as f:
+    with open("./static/book/"+name+"/namelist.txt") as f:
         for line in f.readlines():
             cur_name = str(line.strip())
             all_name[cur_name] = 0
