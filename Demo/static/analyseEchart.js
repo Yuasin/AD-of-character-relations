@@ -1,5 +1,5 @@
 //获取数据
-fetch('./static/analyseData1.json')
+fetch('./static/analyseData.json')
     .then((res) => res.json())
     .then((data) => {
 

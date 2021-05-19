@@ -2,6 +2,7 @@ import json
 import math
 from analysis.tree import TreeNode
 
+
 # 边的权重为"label":edges[i][j]
 # data_list为python数据格式
 # buildJson构建可在G6关系图中适用的的Json格式数据
@@ -13,6 +14,7 @@ def buildJson(nodes: dict, edges: dict, combos_tree:TreeNode, labels=None):
     data_list = {"nodes": [], "edges": [], "combos": []}
     id_node = {}
     id_n = 0
+
     # 加点
     for i in nodes.keys():
         id_node[i] = id_n
@@ -27,27 +29,28 @@ def buildJson(nodes: dict, edges: dict, combos_tree:TreeNode, labels=None):
             data_list["edges"].append(cur_edges)
 
     # 添加combo
-    nodes_level = [combos_tree]
-    while nodes_level:
-        temp, res = [], []
-        for node in nodes_level:
-            combo = {"id": "combo" + str(node.val)}
-            res.append(node.val)
-            if node.parent:
-                combo["parentId"] = "combo" + str(node.parent.val)
-            if node.left:
-                temp.append(node.left)
-            if node.right:
-                temp.append(node.right)
-            data_list["combos"].append(combo)
-        nodes_level = temp
-    #  在节点中添加归属combo信息
-    nodes_sorted = sorted(nodes.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
-    rank = 0
-    for i in nodes_sorted:
-        # print(i[0])
-        data_list["nodes"][id_node[i[0]]]["comboId"] = "combo" + str(labels[rank])
-        rank += 1
+    if combos_tree is not None:
+        nodes_level = [combos_tree]
+        while nodes_level:
+            temp, res = [], []
+            for node in nodes_level:
+                combo = {"id": "combo" + str(node.val)}
+                res.append(node.val)
+                if node.parent:
+                    combo["parentId"] = "combo" + str(node.parent.val)
+                if node.left:
+                    temp.append(node.left)
+                if node.right:
+                    temp.append(node.right)
+                data_list["combos"].append(combo)
+            nodes_level = temp
+        #  在节点中添加归属combo信息
+        nodes_sorted = sorted(nodes.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+        rank = 0
+        for i in nodes_sorted:
+            # print(i[0])
+            data_list["nodes"][id_node[i[0]]]["comboId"] = "combo" + str(labels[rank])
+            rank += 1
 
     # names_len = len(names)
     # parentId = names_len
@@ -72,8 +75,7 @@ def buildJson(nodes: dict, edges: dict, combos_tree:TreeNode, labels=None):
     #     id_combo += 1
     #     parentId += 1
 
-
-    with open('./static/data2weight.json', 'w', encoding='utf-8') as f:
+    with open('./static/dataWithWeight.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data_list, ensure_ascii=False))
 
-# def add_combo():
+    return data_list

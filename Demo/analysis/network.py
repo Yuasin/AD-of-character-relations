@@ -73,7 +73,9 @@ def networkAnalyse(nodes: dict, edges: dict):
     path_distribution = {}
     for source in shortest_path:
         for target in shortest_path[source]:
-            cur_length = len(shortest_path[source][target])
+            cur_length = len(shortest_path[source][target])-1
+            if cur_length == 0:
+                continue
             if cur_length in path_distribution:
                 path_distribution[cur_length] += 1
             else:
@@ -165,5 +167,5 @@ def networkAnalyse(nodes: dict, edges: dict):
         data_list["path"]["dis"][i - 1]["value"] = path_distribution[i]
 
     # 输出json
-    with open('./static/analyseData1.json', 'w', encoding='utf-8') as f:
+    with open('./static/analyseData.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data_list, ensure_ascii=False))

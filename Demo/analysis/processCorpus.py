@@ -14,16 +14,16 @@ def get_encode_info(file):
     return detector.result['encoding']
 
 
-def getSection(file_name: str) -> List[str]:
+def getSection(name:str ,file_name: str) -> List[str]:
     # 获取txt文件编码
-    # encode_info = get_encode_info(file_name)
-    # print(encode_info)
-    #
+    encode_info = get_encode_info(file_name)
+    print(encode_info)
+
     # f = open(file_name, 'rb')
     # file_content = f.read()
     # file_decode = file_content.decode(encode_info,'ignore')
-    # file_encode = file_decode.encode('GBK','ignore')
-    # new_file_name = 'encodeCorpus .txt'
+    # file_encode = file_decode.encode('UTF-8-SIG','ignore')
+    # new_file_name = './static/book/'+name+'/corpus.txt'
     # with open(new_file_name, 'wb') as f:
     #     f.write(file_encode)
 

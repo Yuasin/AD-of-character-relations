@@ -221,7 +221,8 @@
             <div id="mountNode">
                 <!--?                控制面板容器-->
                 <div class="panel-body control-panel" id="control">
-                    <button class="btn btn-primary btn-block" id="hierarchy">层次聚类</button>
+                    <button class="btn btn-primary btn-block" id="hierarchy">层次聚类计算</button>
+                    <button class="btn btn-primary btn-block" id="showhierarchy">展示聚类结果</button>
                     <button class="btn btn-success btn-block">abc</button>
                 </div>
             </div>
@@ -252,32 +253,6 @@
 <script src="./static/sidebar.js"></script>
 <script src="./static/analyseEchart.js"></script>
 <script>
-    // src="{{ url_for('static', filename='node_modules/@antv/vis-predict-engine/dist/index.esm.js') }}"
-    // const tooltip = new G6.Tooltip({
-    //   offsetX: 10,
-    //   offsetY: 10,
-    //   fixToNode: [1, 0.5],
-    //   // the types of items that allow the tooltip show up
-    //   // 允许出现 tooltip 的 item 类型
-    //   itemTypes: ['node', 'edge'],
-    //   // custom the tooltip's content
-    //   // 自定义 tooltip 内容
-    //   getContent: (e) => {
-    //     const outDiv = document.createElement('div');
-    //     outDiv.style.width = 'fit-content';
-    //     outDiv.style.height = 'fit-content';
-    //     const model = e.item.getModel();
-    //     if (e.item.getType() === 'node') {
-    //       outDiv.innerHTML = `${model.name}`;
-    //     } else {
-    //       const source = e.item.getSource();
-    //       const target = e.item.getTarget();
-    //       outDiv.innerHTML = `来源：${source.getModel().name}<br/>去向：${target.getModel().name}`;
-    //     }
-    //     return outDiv;
-    //   },
-    // });
-
     const {louvain} = G6.Algorithm;
 
     const button = document.createElement('button');
@@ -288,7 +263,7 @@
     document.getElementById('control').appendChild(buttonFindPath);
 
     const hierarchybutton = document.getElementById('hierarchy')
-
+    const showhierarchybutton = document.getElementById('showhierarchy')
     const subjectColors = [
         '#5F95FF', // blue
         '#61DDAA',
@@ -323,7 +298,6 @@
         defaultCombo: {
             type: 'rect',
             padding: 10,
-
             // 其他配置
         },
         defaultNode: {
@@ -337,36 +311,16 @@
             }
         },
         layout: {
-            type: 'comboForce',
-            center: [200, 200],     // 可选，默认为图的中心
-            linkDistance: 10,         // 可选，边长
-            nodeStrength: 100,         // 可选
-            edgeStrength: 0.1,        // 可选
-            gravity: 0.01, //影响布局的紧凑程度，越小布局越不容易重叠
-            // preventComboOverlap: true,
-            comboCollideStrength: 1,
-            comboSpacing: (d) => {
-                // d is a combo
-                return 1000;
-            },
-            onTick: () => {           // 可选
-                console.log('ticking');
-            },
-            onLayoutEnd: () => {      // 可选
-                console.log('combo force layout done');
-            }
-        },
-        // layout: {
-        //     type: 'fruchterman',
-        //     center: [200, 200], // 可选，默认为图的中心
-        //     gravity: 1, // 可选
-        //     speed: 2, // 可选
-        //     clustering: true, // 可选
-        //     clusterGravity: 30, // 可选
-        //     maxIteration: 2000, // 可选，迭代次数
-        //     workerEnabled: true, // 可选，开启 web-worker
-        //     gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
-        // },
+            type: 'fruchterman',
+            center: [200, 200], // 可选，默认为图的中心
+            gravity: 1, // 可选
+            speed: 2, // 可选
+            clustering: true, // 可选
+            clusterGravity: 40, // 可选
+            maxIteration: 2000, // 可选，迭代次数
+            workerEnabled: true, // 可选，开启 web-worker
+            gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+        }
     });
 
     //布局类型
@@ -384,21 +338,32 @@
 
     const layoutCombo = {
         type: 'comboForce',
+        // workerEnabled和gpuEnabled中有一个是导致layout失败的罪魁祸首
+        gpuEnabled: true,
+        workerEnabled: false,
         center: [200, 200],     // 可选，默认为图的中心
-        linkDistance: 50,         // 可选，边长
-        nodeStrength: 30,         // 可选
+        linkDistance: 10,         // 可选，边长
+        nodeStrength: 100,         // 可选
         edgeStrength: 0.1,        // 可选
-        onTick: () => {           // 可选
-            console.log('ticking');
+        gravity: 0.01, //影响布局的紧凑程度，越小布局越不容易重叠
+        // preventComboOverlap: true,
+        comboCollideStrength: 1,
+        comboSpacing: (d) => {
+            // d is a combo
+            return 1000;
         },
+        // onTick: () => {           // 可选
+        //     console.log('ticking');
+        // },
         onLayoutEnd: () => {      // 可选
             console.log('combo force layout done');
         }
     };
 
-    fetch('./static/data2weight.json')
+    fetch('./static/dataWithWeight.json')
             .then((res) => res.json())
             .then((data) => {
+                console.log("初始化数据获取")
                 const clearStates = () => {
                     graph.getNodes().forEach((node) => {
                         graph.clearItemStates(node);
@@ -407,27 +372,9 @@
                         graph.clearItemStates(edge);
                     });
                 };
-                graph.combo((combo) => {
-                    const colorSet = colorSets[parseInt(combo.id.replace("combo", "")) % colorSets.length]
-                    return {
-                        id: combo.id,
-                        style: {
-                            fill: colorSet.mainFill,
-                            fillOpacity: 10,
-                        },
-                    };
-                });
+
                 graph.data(data);
                 graph.render();
-
-                graph.on('combo:mouseenter', (evt) => {
-                    const {item} = evt;
-                    graph.setItemState(item, 'active', false);
-                });
-                graph.on('combo:mouseleaver', (evt) => {
-                    const {item} = evt;
-                    graph.setItemState(item, 'active', false);
-                });
 
                 // 查找最短路径
                 findPath(graph, data)
@@ -447,13 +394,53 @@
                     graph.refresh();
                     graph.updateLayout(layoutF);
                 });
-
-                hierarchybutton.addEventListener('click', (e) => {
-                    // graph.refresh();
-                    graph.updateLayout(layoutCombo);
-                    graph.render();
-                });
             });
+
+    //设置层次聚类全局变量
+    var dataContent = null
+    //层次聚类
+    hierarchybutton.addEventListener('click', (e) => {
+        // 使用Ajax进行层次聚类数据更新
+        $(function () {
+            $.getJSON('/cluster',
+                    function (data) {
+                        console.log("层次聚类数据获取成功")
+                        console.log(data.content)
+                        dataContent = data.content
+                        graph.data(dataContent)
+                        // combo交互配置
+                        graph.on('combo:mouseenter', (evt) => {
+                            const {item} = evt;
+                            graph.setItemState(item, 'active', false);
+                        });
+                        graph.on('combo:mouseleaver', (evt) => {
+                            const {item} = evt;
+                            graph.setItemState(item, 'active', false);
+                        });
+                        graph.combo((combo) => {
+                            const colorSet = colorSets[parseInt(combo.id.replace("combo", "")) % colorSets.length]
+                            return {
+                                id: combo.id,
+                                style: {
+                                    fill: colorSet.mainFill,
+                                    fillOpacity: 10,
+                                },
+                            };
+                        });
+                        graph.render();
+                    });
+            return false;
+        });
+
+    });
+    //层次聚类布局
+    showhierarchybutton.addEventListener('click', (e) => {
+        $(function () {
+            graph.updateLayout(layoutCombo);
+            return false;
+        });
+
+    });
 
 
     // if (typeof window !== 'undefined')

@@ -2,11 +2,11 @@ from analysis.processCorpus import getSection
 from analysis.buildJson import buildJson
 from analysis.network import networkAnalyse
 from analysis.hierarchyCluster import cluster_hierarchy
+import pypinyin
 
 def buildNet(name:str):
     # 获取分段过的语料文件
-    # all_section = txtTest.getSection("../corpus4.txt")
-    all_section = getSection("./static/book/"+name+"/corpus.txt")
+    all_section = getSection(name, "./static/book/"+name+"/corpus.txt")
 
     # 读入人物列表，去除人物列表头尾的空白
     all_name = {}
@@ -43,15 +43,43 @@ def buildNet(name:str):
                         adjacency_list[e][cur_entity] = 1
         section_entity.clear()
 
+    # 将中文转换为拼音
+    all_name, adjacency_list = turn_pinyin(all_name, adjacency_list)
+    print(all_name)
+    print(adjacency_list)
+
     # print(all_name)
     # print(adjacency_list)
 
-
     # 层次聚类情况：前端点击层次聚类按钮时再进行层次聚类
     # 层次聚类返回结果：层次聚类结果应该直接修改json文件
-    combos_tree, labels = cluster_hierarchy(all_name,adjacency_list)
+    # combos_tree, labels = cluster_hierarchy(all_name,adjacency_list)
     # combo_label, sorted_names = cluster_hierarchy(all_name,adjacency_list)
-    buildJson(all_name, adjacency_list, combos_tree, labels)
+    buildJson(all_name, adjacency_list, None, None)
     networkAnalyse(all_name, adjacency_list)
 
     return all_name,adjacency_list
+
+
+def turn_pinyin(nodes: dict, edges: dict):
+    new_nodes = {}
+    new_edges = {}
+    for k in nodes:
+        # print(k)
+        s = ''
+        for i in pypinyin.pinyin(k, style=pypinyin.NORMAL):
+            s += ''.join(i)
+        new_nodes[s] = nodes[k]
+
+    for k in edges:
+        s = ''
+        for i in pypinyin.pinyin(k, style=pypinyin.NORMAL):
+            s += ''.join(i)
+        new_edges[s] = {}
+        for inner in edges[k]:
+            new_word = ''
+            for i in pypinyin.pinyin(inner, style=pypinyin.NORMAL):
+                new_word += ''.join(i)
+            new_edges[s][new_word] = edges[k][inner]
+
+    return new_nodes,new_edges

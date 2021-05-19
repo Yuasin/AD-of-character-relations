@@ -1,4 +1,4 @@
-# import scipy.cluster.hierarchy as sch
+import scipy.cluster.hierarchy as sch
 from sklearn.cluster import AgglomerativeClustering
 import math
 import pypinyin
@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from analysis.tree import TreeNode
 
 
-def cluster_hierarchy(nodes: dict, edges: dict):
+def cluster_hierarchy(nodes: dict, edges: dict, num=5):
     nodes_sorted = sorted(nodes.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
     matrix_length = len(nodes_sorted)
     names = []
@@ -27,7 +27,7 @@ def cluster_hierarchy(nodes: dict, edges: dict):
                 # 此时等于该人物的出现频次
                 value = nodes_sorted[row][1]
             else:
-                # edges中可能没有相对应到改人的边
+                # edges中可能没有相对应到该人的边
                 if target not in edges[source]:
                     value = 0
                 else:
@@ -39,7 +39,10 @@ def cluster_hierarchy(nodes: dict, edges: dict):
         similarity_matrix.append([])
         for col in range(0, matrix_length):
             product = adjacency_matrix[row][row] * adjacency_matrix[col][col]
-            similarity_matrix[row].append(round(adjacency_matrix[row][col] / math.sqrt(product), 3))
+            if product == 0:
+                similarity_matrix[row].append(0)
+            else:
+                similarity_matrix[row].append(round(adjacency_matrix[row][col] / math.sqrt(product), 3))
 
     # 输出矩阵为excel文件
     excel_output(adjacency_matrix, names)
@@ -47,14 +50,14 @@ def cluster_hierarchy(nodes: dict, edges: dict):
 
     # 使用相似矩阵进行层次聚类
     # 可改聚类数量的层次聚类
-    cluster_Number = 6
+    cluster_Number = num
     ac = AgglomerativeClustering(n_clusters=cluster_Number, affinity='euclidean', linkage='ward',
                                  compute_full_tree=True)
     print(ac.fit(similarity_matrix))
     labels = ac.fit_predict(similarity_matrix)
     original_tree = dict(enumerate(ac.children_, ac.n_leaves_))
-    print(labels)
-    print(dict(enumerate(ac.children_, ac.n_leaves_)))
+    print("样本归属聚类标记： "+str(labels))
+    print("节点与其左右子节点： " + str(dict(enumerate(ac.children_, ac.n_leaves_))))
 
     # 需要新建立一个多叉树，叶节点是样本
     # 换而言之需要找到同一个label样本的最近父节点x，x代表了这个label下样本的层级
@@ -88,7 +91,7 @@ def cluster_hierarchy(nodes: dict, edges: dict):
     traveseTree(root, labels)
     # 打印树
     Print(root)
-    return root, labels
+
 
     # 层次聚类树模型示范
     # X = np.concatenate([np.random.randn(3, 10), np.random.randn(2, 10) + 100])
@@ -106,13 +109,14 @@ def cluster_hierarchy(nodes: dict, edges: dict):
     # 拼音转换
     # names_pinyin = pinyin(names)
     # 自带层次聚类图
-    # dn = sch.dendrogram(label, labels=names)
+    # dn = sch.dendrogram(label, labels=names_pinyin)
+
 
     # 保存图片，使用bbox_inches='tight'输出完整图片
-    # plt.savefig('./static/PaperData/hierarchyCluster1.png', dpi=600, bbox_inches='tight')
-
+    # plt.savefig('./static/PaperData/hierarchyCluster3.png', dpi=600, bbox_inches='tight')
+    # plt.show()
     # return label.tolist(),names
-
+    return root, labels
 
 def traveseTree(root: TreeNode, labels: list):
     if root.left is not None:
