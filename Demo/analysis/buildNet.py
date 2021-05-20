@@ -43,6 +43,9 @@ def buildNet(name:str):
                         adjacency_list[e][cur_entity] = 1
         section_entity.clear()
 
+    # 删除文学作品中没有出现的人物
+    deleteData(all_name,adjacency_list)
+
     # 将中文转换为拼音
     all_name, adjacency_list = turn_pinyin(all_name, adjacency_list)
     print(all_name)
@@ -60,6 +63,14 @@ def buildNet(name:str):
 
     return all_name,adjacency_list
 
+def deleteData(nodes:dict, edges:dict):
+    delete_key = []
+    for key in nodes:
+        if nodes[key] == 0:
+            delete_key.append(key)
+    for key in delete_key:
+        del nodes[key]
+        del edges[key]
 
 def turn_pinyin(nodes: dict, edges: dict):
     new_nodes = {}
@@ -67,19 +78,40 @@ def turn_pinyin(nodes: dict, edges: dict):
     for k in nodes:
         # print(k)
         s = ''
+        count = 0
         for i in pypinyin.pinyin(k, style=pypinyin.NORMAL):
-            s += ''.join(i)
+            if count < 2:
+                s += ''.join(str(i[0]).title())
+            else:
+                s += ''.join(i)
+            if count == 0:
+                s += ' '
+            count += 1
         new_nodes[s] = nodes[k]
 
     for k in edges:
         s = ''
+        count = 0
         for i in pypinyin.pinyin(k, style=pypinyin.NORMAL):
-            s += ''.join(i)
+            if count < 2:
+                s += ''.join(str(i[0]).title())
+            else:
+                s += ''.join(i)
+            if count == 0:
+                s += ' '
+            count += 1
         new_edges[s] = {}
         for inner in edges[k]:
             new_word = ''
+            count = 0
             for i in pypinyin.pinyin(inner, style=pypinyin.NORMAL):
-                new_word += ''.join(i)
+                if count < 2:
+                    new_word += ''.join(str(i[0]).title())
+                else:
+                    new_word += ''.join(i)
+                if count == 0:
+                    new_word += ' '
+                count += 1
             new_edges[s][new_word] = edges[k][inner]
 
     return new_nodes,new_edges

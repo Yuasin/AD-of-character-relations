@@ -50,6 +50,7 @@ def buildJson(nodes: dict, edges: dict, combos_tree:TreeNode, labels=None):
         for i in nodes_sorted:
             # print(i[0])
             data_list["nodes"][id_node[i[0]]]["comboId"] = "combo" + str(labels[rank])
+            data_list["nodes"][id_node[i[0]]]["cluster"] = "combo" + str(labels[rank])
             rank += 1
 
     # names_len = len(names)

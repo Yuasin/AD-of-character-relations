@@ -65,7 +65,7 @@
 控制面板
 */
 .control-panel {
-    background-color: rgba(0,0,155,0.3);
+    background-color: rgba(0, 0, 155, 0.3);
     position: fixed;
     height: 500px;
     width: 300px;
@@ -73,4 +73,27 @@
     border: 3px solid #999999;
     right: 0px;
     bottom: 0px
+}
+
+select {
+    width: 100%;
+    height: 40pt;
+    line-height: 40pt;
+    padding-right: 20pt;
+    margin-top: 5px;
+    text-indent: 4pt;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #94c1e7;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 10pt;
+    font-weight: 300;
+    color: RGBA(102, 102, 102, 0.7);
+    cursor: pointer;
+    outline: none;
 }

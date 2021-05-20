@@ -221,9 +221,25 @@
             <div id="mountNode">
                 <!--?                控制面板容器-->
                 <div class="panel-body control-panel" id="control">
-                    <button class="btn btn-primary btn-block" id="hierarchy">层次聚类计算</button>
-                    <button class="btn btn-primary btn-block" id="showhierarchy">展示聚类结果</button>
-                    <button class="btn btn-success btn-block">abc</button>
+                    <div class="form-group" style="text-align: center">
+                        <label for="namelist">层次聚类数量</label>
+                        <input type=text size=5 name=clusterNum>
+                        <p class="help-block" style="font-size: 3px">聚类数量在人物数量十分之一以内可视化效果较好</p>
+                    </div>
+                    <button class="btn btn-primary btn-block" id="hierarchy">层次聚类展示</button>
+                    <button class="btn btn-primary btn-block" id="showhierarchy">切换层次聚类模式</button>
+                    <p></p>
+
+                    <div style="text-align: center; margin-top: 15px">
+                        <label for="mode">交互模式选择</label>
+                        <select id="selector" name="mode">
+                            <option value="default">全交互模式</option>
+                            <option value="viewMode">阅览模式</option>
+                            <option value="relaMode">邻接节点查看模式</option>
+                            <option value="comboMode">层次聚类交互模式</option>
+                            <option value="fisheyeMode">鱼眼探索模式</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -253,6 +269,9 @@
 <script src="./static/sidebar.js"></script>
 <script src="./static/analyseEchart.js"></script>
 <script>
+    <!--?    plugins插件-->
+
+
     const {louvain} = G6.Algorithm;
 
     const button = document.createElement('button');
@@ -292,8 +311,16 @@
                 {
                     type: 'drag-combo',
                     onlyChangeComboSize: true,
-                },], // 允许拖拽画布、放缩画布、拖拽节点,
+                },], // 允许拖拽画布、放缩画布、拖拽节点
+            relaMode: ['drag-canvas', 'zoom-canvas', 'activate-relations'],
+            viewMode: ['drag-canvas', 'zoom-canvas'],
+            fisheyeMode: ['drag-canvas', 'zoom-canvas'],
+            comboMode: ['drag-canvas', 'zoom-canvas', {
+                type: 'drag-combo',
+                onlyChangeComboSize: true,
+            },],
         },
+        plugins: [],
         // groupByTypes: false,
         defaultCombo: {
             type: 'rect',
@@ -311,15 +338,15 @@
             }
         },
         layout: {
-            type: 'fruchterman',
-            center: [200, 200], // 可选，默认为图的中心
-            gravity: 1, // 可选
-            speed: 2, // 可选
-            clustering: true, // 可选
-            clusterGravity: 40, // 可选
-            maxIteration: 2000, // 可选，迭代次数
-            workerEnabled: true, // 可选，开启 web-worker
-            gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+            type: 'force',
+            preventOverlap: true,
+            clustering: true,
+            clusterNodeStrength: -5,
+            clusterEdgeDistance: 200,
+            clusterNodeSize: 20,
+            clusterFociStrength: 1.2,
+            nodeSpacing: 5,
+            preventOverlap: true,
         }
     });
 
@@ -327,11 +354,11 @@
     const layoutF = {
         type: 'fruchterman',
         center: [200, 200], // 可选，默认为图的中心
-        gravity: 1, // 可选
+        gravity: 0.01, // 可选
         speed: 2, // 可选
         clustering: true, // 可选
-        clusterGravity: 40, // 可选
-        maxIteration: 2000, // 可选，迭代次数
+        clusterGravity: 50, // 可选
+        maxIteration: 300, // 可选，迭代次数
         workerEnabled: true, // 可选，开启 web-worker
         gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
     };
@@ -342,12 +369,14 @@
         gpuEnabled: true,
         workerEnabled: false,
         center: [200, 200],     // 可选，默认为图的中心
-        linkDistance: 10,         // 可选，边长
+        linkDistance: 1,         // 可选，边长
         nodeStrength: 100,         // 可选
         edgeStrength: 0.1,        // 可选
+        depthRepulsiveForceScale: 10,
         gravity: 0.01, //影响布局的紧凑程度，越小布局越不容易重叠
-        // preventComboOverlap: true,
-        comboCollideStrength: 1,
+        comboGravity: 100,
+        // preventOverlap: true,
+        comboCollideStrength: 0.7,
         comboSpacing: (d) => {
             // d is a combo
             return 1000;
@@ -358,6 +387,15 @@
         onLayoutEnd: () => {      // 可选
             console.log('combo force layout done');
         }
+    };
+
+    const layoutDagre = {
+        type: 'dagre',
+        sortByCombo: true,
+        ranksep: 10,
+        nodesep: 10,
+        gpuEnabled: false,
+        workerEnabled: false,
     };
 
     fetch('./static/dataWithWeight.json')
@@ -402,7 +440,9 @@
     hierarchybutton.addEventListener('click', (e) => {
         // 使用Ajax进行层次聚类数据更新
         $(function () {
-            $.getJSON('/cluster',
+            $.getJSON('/cluster', {
+                        num: $('input[name="clusterNum"]').val()
+                    },
                     function (data) {
                         console.log("层次聚类数据获取成功")
                         console.log(data.content)
@@ -442,6 +482,24 @@
 
     });
 
+    //交互模式切换监听
+    document.getElementById('selector').addEventListener('change', e => {
+        const value = e.target.value;
+        if (value === 'fisheyeMode') {
+            fisheye = new G6.Fisheye({
+                trigger: 'mousemove',
+                d: 3,
+                r: 150,
+                // delegateStyle: clone(lensDelegateStyle),
+                showLabel: false,
+            });
+            graph.addPlugin(fisheye);
+        } else {
+            graph.removePlugin(fisheye);
+        }
+        // 切换交互模式
+        graph.setMode(value);
+    });
 
     // if (typeof window !== 'undefined')
     //     window.onresize = () => {

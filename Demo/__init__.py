@@ -31,7 +31,7 @@ def hello():
 @app.route('/CondorHeroes')
 def show_example(name=None):
     global all_name, adjacency_list
-    all_name, adjacency_list = buildNet('CondorHeroes')
+    # all_name, adjacency_list = buildNet('CondorHeroes')
     # print("修改后全局变量" + str(all_name))
     return render_template('example.html', name=name)
 
@@ -47,9 +47,10 @@ def look_book(name=None):
 # 层次聚类
 @app.route('/cluster')
 def hierarchycluster():
-    print("层次聚类测试")
+    clusterNum = request.args.get('num', 0, type=int)
+    print("层次聚类测试" + str(clusterNum))
     global all_name, adjacency_list
-    combos_tree, labels = cluster_hierarchy(all_name, adjacency_list)
+    combos_tree, labels = cluster_hierarchy(all_name, adjacency_list, clusterNum)
     data_list = buildJson(all_name, adjacency_list, combos_tree, labels)
     return jsonify(content=data_list)
 
