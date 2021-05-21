@@ -7,6 +7,8 @@ from analysis.hierarchyCluster import cluster_hierarchy
 from analysis.buildJson import buildJson
 from urllib.parse import urlparse, urljoin
 
+from datetime import timedelta
+
 
 # 文件上传保存路径
 UPLOAD_FOLDER = './static/book'
@@ -18,6 +20,7 @@ app = Flask(__name__,
             static_folder='static',
             )
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 
 # 主页
 @app.route('/')
@@ -31,7 +34,7 @@ def hello():
 @app.route('/CondorHeroes')
 def show_example(name=None):
     global all_name, adjacency_list
-    # all_name, adjacency_list = buildNet('CondorHeroes')
+    all_name, adjacency_list = buildNet('CondorHeroes')
     # print("修改后全局变量" + str(all_name))
     return render_template('example.html', name=name)
 
@@ -47,7 +50,7 @@ def look_book(name=None):
 # 层次聚类
 @app.route('/cluster')
 def hierarchycluster():
-    clusterNum = request.args.get('num', 0, type=int)
+    clusterNum = request.args.get('num', 5, type=int)
     print("层次聚类测试" + str(clusterNum))
     global all_name, adjacency_list
     combos_tree, labels = cluster_hierarchy(all_name, adjacency_list, clusterNum)

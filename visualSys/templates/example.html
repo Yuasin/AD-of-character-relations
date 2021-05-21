@@ -229,6 +229,9 @@
                     <button class="btn btn-primary btn-block" id="hierarchy">层次聚类展示</button>
                     <button class="btn btn-primary btn-block" id="showhierarchy">切换层次聚类模式</button>
                     <p></p>
+                    <button class="btn btn-info btn-block" id="louvain">louvain聚类</button>
+                    <button class="btn btn-info btn-block" id="findpath">查看最短路径</button>
+                    <p></p>
 
                     <div style="text-align: center; margin-top: 15px">
                         <label for="mode">交互模式选择</label>
@@ -269,20 +272,19 @@
 <script src="./static/sidebar.js"></script>
 <script src="./static/analyseEchart.js"></script>
 <script>
-    <!--?    plugins插件-->
+    //plugins插件
 
 
     const {louvain} = G6.Algorithm;
 
-    const button = document.createElement('button');
-    button.innerHTML = `Click Here to Clustering 点此自动聚类`;
-    document.getElementById('control').appendChild(button);
-    const buttonFindPath = document.createElement('button');
-    buttonFindPath.innerHTML = `查看最短路径`;
-    document.getElementById('control').appendChild(buttonFindPath);
 
+    // 获取面板中按钮
+    const louvainbutton = document.getElementById('louvain')
+    const buttonFindPath = document.getElementById('findpath')
     const hierarchybutton = document.getElementById('hierarchy')
     const showhierarchybutton = document.getElementById('showhierarchy')
+
+
     const subjectColors = [
         '#5F95FF', // blue
         '#61DDAA',
@@ -318,7 +320,12 @@
             comboMode: ['drag-canvas', 'zoom-canvas', {
                 type: 'drag-combo',
                 onlyChangeComboSize: true,
-            },],
+            }, {
+                type: 'collapse-expand-combo',
+                trigger: 'dbclick',
+                relayout: false, // 收缩展开后，不重新布局
+            },
+            ],
         },
         plugins: [],
         // groupByTypes: false,
@@ -338,28 +345,30 @@
             }
         },
         layout: {
-            type: 'force',
-            preventOverlap: true,
-            clustering: true,
-            clusterNodeStrength: -5,
-            clusterEdgeDistance: 200,
-            clusterNodeSize: 20,
-            clusterFociStrength: 1.2,
-            nodeSpacing: 5,
-            preventOverlap: true,
+            type: 'fruchterman',
+            center: [200, 200], // 可选，默认为图的中心
+            gravity: 0.01, // 可选
+            speed: 2, // 可选
+            clustering: true, // 可选
+            clusterGravity: 50, // 可选
+            maxIteration: 300, // 可选，迭代次数
+            workerEnabled: true, // 可选，开启 web-worker
+            gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
         }
     });
 
     //布局类型
     const layoutF = {
-        type: 'fruchterman',
-        center: [200, 200], // 可选，默认为图的中心
-        gravity: 0.01, // 可选
-        speed: 2, // 可选
-        clustering: true, // 可选
-        clusterGravity: 50, // 可选
-        maxIteration: 300, // 可选，迭代次数
-        workerEnabled: true, // 可选，开启 web-worker
+        type: 'force',
+        preventOverlap: true,
+        clustering: true,
+        clusterNodeStrength: -50,
+        clusterEdgeDistance: 2000,
+        clusterNodeSize: 50,
+        clusterFociStrength: 1.2,
+        nodeSpacing: 5,
+        preventOverlap: true,
+        workerEnabled: false, // 可选，开启 web-worker
         gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
     };
 
@@ -417,7 +426,7 @@
                 // 查找最短路径
                 findPath(graph, data)
 
-                button.addEventListener('click', (e) => {
+                louvainbutton.addEventListener('click', (e) => {
                     const clusteredData = louvain(data, false);
                     // console.log(clusteredData)
                     clusteredData.clusters.forEach((cluster, i) => {
@@ -476,48 +485,31 @@
     //层次聚类布局
     showhierarchybutton.addEventListener('click', (e) => {
         $(function () {
-            graph.updateLayout(layoutCombo);
+            graph.updateLayout(layoutF);
             return false;
         });
 
     });
 
     //交互模式切换监听
+    const fisheye = new G6.Fisheye({
+        trigger: 'mousemove',
+        d: 3,
+        r: 150,
+        // delegateStyle: clone(lensDelegateStyle),
+        showLabel: false,
+    });
     document.getElementById('selector').addEventListener('change', e => {
         const value = e.target.value;
         if (value === 'fisheyeMode') {
-            fisheye = new G6.Fisheye({
-                trigger: 'mousemove',
-                d: 3,
-                r: 150,
-                // delegateStyle: clone(lensDelegateStyle),
-                showLabel: false,
-            });
             graph.addPlugin(fisheye);
         } else {
+            // 切换交互模式
+            graph.setMode(value);
             graph.removePlugin(fisheye);
         }
-        // 切换交互模式
-        graph.setMode(value);
     });
 
-    // if (typeof window !== 'undefined')
-    //     window.onresize = () => {
-    //         if (!graph || graph.get('destroyed')) return;
-    //         if (!container || !container.scrollWidth || !container.scrollHeight) return;
-    //         graph.changeSize(container.scrollWidth, container.scrollHeight - 20);
-    //     };
-    // const main = async () => {
-    //     const response = await fetch(
-    //         './static/data2weight.json',
-    //         // 'https://gw.alipayobjects.com/os/basement_prod/6cae02ab-4c29-44b2-b1fd-4005688febcb.json',
-    //     );
-    //     const remoteData = await response.json();
-    //
-    //     graph.data(remoteData); // 读取 Step 2 中的数据源到图上
-    //     graph.render();
-    // };// 渲染图
-    // main();
 
 </script>
 </html>

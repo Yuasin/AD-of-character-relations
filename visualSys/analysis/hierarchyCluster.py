@@ -52,7 +52,7 @@ def cluster_hierarchy(nodes: dict, edges: dict, num=5):
     # 可改聚类数量的层次聚类
     # linkage四选项  {'ward', 'complete', 'average', 'single'
     cluster_Number = num
-    ac = AgglomerativeClustering(n_clusters=cluster_Number, affinity='euclidean', linkage='average',
+    ac = AgglomerativeClustering(n_clusters=cluster_Number, affinity='euclidean', linkage='ward',
                                  compute_full_tree=True)
     print(ac.fit(similarity_matrix))
     labels = ac.fit_predict(similarity_matrix)

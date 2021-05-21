@@ -4,7 +4,7 @@ import txtTest
 from buildJson import buildJson
 
 # 获取分段过的语料文件
-all_section = txtTest.getSection("../corpus4.txt")
+all_section = txtTest.getSection("corpus4.txt")
 
 # 装载LAC模型
 lac = LAC(mode='lac')

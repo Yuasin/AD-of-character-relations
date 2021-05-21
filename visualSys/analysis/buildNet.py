@@ -18,7 +18,7 @@ def buildNet(name:str):
             adjacency_list[cur_name] = {}
     # print(all_name)
 
-    test_section = all_section[200:250]
+    # test_section = all_section[200:250]
     # print(test_section)
 
     # adjacency_list 储存实体，以及与实体相连的其他实体,以及相连的次数 {entity:{connect_entity:times}}
@@ -47,9 +47,9 @@ def buildNet(name:str):
     deleteData(all_name,adjacency_list)
 
     # 将中文转换为拼音
-    all_name, adjacency_list = turn_pinyin(all_name, adjacency_list)
-    print(all_name)
-    print(adjacency_list)
+    # all_name, adjacency_list = turn_pinyin(all_name, adjacency_list)
+    # print(all_name)
+    # print(adjacency_list)
 
     # print(all_name)
     # print(adjacency_list)
