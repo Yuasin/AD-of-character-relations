@@ -60,10 +60,7 @@ def cluster_hierarchy(nodes: dict, edges: dict, num=5):
     print("样本归属聚类标记： "+str(labels))
     print("节点与其左右子节点： " + str(dict(enumerate(ac.children_, ac.n_leaves_))))
 
-    # 需要新建立一个多叉树，叶节点是样本
-    # 换而言之需要找到同一个label样本的最近父节点x，x代表了这个label下样本的层级
-    # 通过此种方式遍历树，建立字典 dict{label: x}
-    # ！！或者通过另一种方式，进行遍历树，当遍历到叶子节点时，用叶子节点的值作为索引
+    # 进行遍历树，当遍历到叶子节点时，用叶子节点的值作为索引
     # 找到labels_中对应的值，并且对当前节点的值进行替换
     # 当一个节点左右节点的值相等时，将该值赋予当前节点，并且把左右节点置为空
     # 当树修改完毕之后，从上到下通过树建立combos信息，再根据label对nodes添加combos信息
@@ -93,25 +90,12 @@ def cluster_hierarchy(nodes: dict, edges: dict, num=5):
     # 打印树
     Print(root)
 
-
-    # 层次聚类树模型示范
-    # X = np.concatenate([np.random.randn(3, 10), np.random.randn(2, 10) + 100])
-    # print(X)
-    # model = AgglomerativeClustering(linkage="average", affinity="cosine")
-    # model.fit(X)
-    # print(model.labels_)
-    #
-    # ii = itertools.count(X.shape[0])
-    # print([{'node_id': next(ii), 'left': x[0], 'right': x[1]} for x in model.children_])
-    # print(dict(enumerate(model.children_, model.n_leaves_)))
-
     # single每两个样本组成一个层次
     # label = sch.linkage(similarity_matrix, method='complete')
     # 拼音转换
     # names_pinyin = pinyin(names)
     # 自带层次聚类图
     # dn = sch.dendrogram(label, labels=names_pinyin)
-
 
     # 保存图片，使用bbox_inches='tight'输出完整图片
     # plt.savefig('./static/PaperData/hierarchyCluster3.png', dpi=600, bbox_inches='tight')

@@ -51,13 +51,9 @@ def buildNet(name:str):
     # print(all_name)
     # print(adjacency_list)
 
-    # print(all_name)
-    # print(adjacency_list)
-
     # 层次聚类情况：前端点击层次聚类按钮时再进行层次聚类
     # 层次聚类返回结果：层次聚类结果应该直接修改json文件
     # combos_tree, labels = cluster_hierarchy(all_name,adjacency_list)
-    # combo_label, sorted_names = cluster_hierarchy(all_name,adjacency_list)
     buildJson(all_name, adjacency_list, None, None)
     networkAnalyse(all_name, adjacency_list)
 

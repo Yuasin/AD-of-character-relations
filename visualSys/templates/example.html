@@ -32,9 +32,10 @@
             <!--?              侧标栏导航栏-->
             <div class="masthead clearfix">
                 <div class="inner">
+                    <h3 class="masthead-brand" style="color: white">{{ name }}</h3>
                     <nav>
                         <ul class="nav masthead-nav">
-                            <li class="active"><a href="/">主页</a></li>
+                            <li class="active"><a href="/more">主页</a></li>
                             <li><a href="/">查看更多</a></li>
                             <li><a href="https://github.com/Yuasin/GP">Github</a></li>
                         </ul>
@@ -227,7 +228,7 @@
                         <p class="help-block" style="font-size: 3px">聚类数量在人物数量十分之一以内可视化效果较好</p>
                     </div>
                     <button class="btn btn-primary btn-block" id="hierarchy">层次聚类展示</button>
-                    <button class="btn btn-primary btn-block" id="showhierarchy">切换层次聚类模式</button>
+                    <button class="btn btn-primary btn-block" id="showhierarchy">切换层次聚类布局</button>
                     <p></p>
                     <button class="btn btn-info btn-block" id="louvain">louvain聚类</button>
                     <button class="btn btn-info btn-block" id="findpath">查看最短路径</button>
@@ -303,7 +304,7 @@
         container: 'mountNode',
         width: 2000,
         height: 1200,
-        linkCenter: true,
+        // linkCenter: true,
         fitView: true,
         fitViewPadding: 50,
         minZoom: 0.00000001,

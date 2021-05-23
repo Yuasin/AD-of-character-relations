@@ -161,11 +161,6 @@ fetch('./static/analyseData.json')
                 {
                     type: 'category',
                     data: data.centrality.names,
-                    position: "top"
-                },
-                {
-                    type: 'category',
-                    data: data.centrality.pinyinnames,
                     axisLabel: {
                         show: true,
                         rotate: 40,
@@ -177,19 +172,16 @@ fetch('./static/analyseData.json')
                             fontWeight: 'bold'
                         }
                     }
-                }
+                },
+                {
+                    type: 'category',
+                    data: data.centrality.pinyinnames,
+                    position: "top"
+                },
             ],
             yAxis: [
                 {
                     type: 'value',
-                    axisLabel: {
-                        formatter: function (a) {
-                            a = +a;
-                            return isFinite(a)
-                                ? echarts.format.addCommas(+a / 1000)
-                                : '';
-                        }
-                    }
                 }
             ],
             dataZoom: [
@@ -259,10 +251,6 @@ fetch('./static/analyseData.json')
             },
             xAxis: [{
                 type: 'category',
-                data: data.degree.pinyinname,
-                position: "top"
-            }, {
-                type: 'category',
                 data: data.degree.name,
                 axisLabel: {
                     show: true,
@@ -275,7 +263,12 @@ fetch('./static/analyseData.json')
                         fontWeight: 'bold'
                     }
                 }
-            }
+            },
+                {
+                    type: 'category',
+                    data: data.degree.pinyinname,
+                    position: "top"
+                },
             ],
             yAxis: {
                 type: 'value'
@@ -287,7 +280,28 @@ fetch('./static/analyseData.json')
                 backgroundStyle: {
                     color: 'rgba(180, 180, 180, 0.2)'
                 }
-            }]
+            }], dataZoom: [
+                {
+                    type: 'inside',
+                    start: 94,
+                    end: 100
+                },
+                {
+                    show: true,
+                    yAxisIndex: 0,
+                    filterMode: 'empty',
+                    width: 20,
+                    height: '80%',
+                    showDataShadow: false,
+                    left: '93%'
+                },
+                {
+                    show: true,
+                    xAxisIndex: 0,
+                    filterMode: 'empty',
+                    height: 25,
+                }
+            ],
         };
         degree_option && degree_myChart.setOption(degree_option);
 
@@ -317,10 +331,6 @@ fetch('./static/analyseData.json')
             },
             xAxis: [{
                 type: 'category',
-                data: data.between.pinyinname,
-                position: "top"
-            }, {
-                type: 'category',
                 data: data.between.name,
                 axisLabel: {
                     show: true,
@@ -333,7 +343,11 @@ fetch('./static/analyseData.json')
                         fontWeight: 'bold'
                     }
                 }
-            }
+            }, {
+                type: 'category',
+                data: data.between.pinyinname,
+                position: "top"
+            },
             ],
             yAxis: {
                 type: 'value'
@@ -345,7 +359,29 @@ fetch('./static/analyseData.json')
                 backgroundStyle: {
                     color: 'rgba(180, 180, 180, 0.2)'
                 }
-            }]
+            }],
+            dataZoom: [
+                {
+                    type: 'inside',
+                    start: 94,
+                    end: 100
+                },
+                {
+                    show: true,
+                    yAxisIndex: 0,
+                    filterMode: 'empty',
+                    width: 20,
+                    height: '80%',
+                    showDataShadow: false,
+                    left: '93%'
+                },
+                {
+                    show: true,
+                    xAxisIndex: 0,
+                    filterMode: 'empty',
+                    height: 25,
+                }
+            ],
         };
         between_option && between_myChart.setOption(between_option);
 
@@ -375,10 +411,6 @@ fetch('./static/analyseData.json')
             },
             xAxis: [{
                 type: 'category',
-                data: data.closeness.pinyinname,
-                position: "top"
-            }, {
-                type: 'category',
                 data: data.closeness.name,
                 axisLabel: {
                     show: true,
@@ -391,6 +423,10 @@ fetch('./static/analyseData.json')
                         fontWeight: 'bold'
                     }
                 }
+            }, {
+                type: 'category',
+                data: data.closeness.pinyinname,
+                position: "top"
             }
             ],
             yAxis: {
@@ -403,7 +439,28 @@ fetch('./static/analyseData.json')
                 backgroundStyle: {
                     color: 'rgba(180, 180, 180, 0.2)'
                 }
-            }]
+            }], dataZoom: [
+                {
+                    type: 'inside',
+                    start: 94,
+                    end: 100
+                },
+                {
+                    show: true,
+                    yAxisIndex: 0,
+                    filterMode: 'empty',
+                    width: 20,
+                    height: '80%',
+                    showDataShadow: false,
+                    left: '93%'
+                },
+                {
+                    show: true,
+                    xAxisIndex: 0,
+                    filterMode: 'empty',
+                    height: 25,
+                }
+            ],
         };
         closeness_option && closeness_myChart.setOption(closeness_option);
 
@@ -435,10 +492,6 @@ fetch('./static/analyseData.json')
             xAxis: [{
                 type: 'category',
                 data: data.cluster.names,
-                position: "top"
-            }, {
-                type: 'category',
-                data: data.cluster.pinyinnames,
                 axisLabel: {
                     show: true,
                     rotate: 40,
@@ -450,6 +503,10 @@ fetch('./static/analyseData.json')
                         fontWeight: 'bold'
                     }
                 }
+            }, {
+                type: 'category',
+                data: data.cluster.pinyinnames,
+                position: "top"
             }
             ],
             yAxis: {
@@ -472,11 +529,10 @@ fetch('./static/analyseData.json')
                     left: '93%'
                 },
                 {
-                    show: false,
+                    show: true,
                     xAxisIndex: 0,
                     filterMode: 'empty',
-                    height: 15,
-                    top: '96%'
+                    height: 25,
                 }
             ],
             series: [{

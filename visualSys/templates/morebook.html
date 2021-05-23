@@ -39,7 +39,7 @@
             <div class="inner cover">
                 <h2>目前作品</h2>
                 {% for book in test %}
-                <a class="btn btn-lg btn-default" href="book{{ book }}">{{ book }}<a/><p></p>
+                <a class="btn btn-lg btn-default" href="book{{ book }}">{{ book }}</a><p></p>
                 {% endfor %}
 
 
@@ -50,14 +50,14 @@
                         <input type="text" name=bookname class="form-control" id="bookname" placeholder="射雕英雄传">
                     </div>
                     <div class="form-group">
-                        <label for="book">书籍</label><p></p>
+                        <label for="book">作品原文</label><p></p>
                         <input type="file" name="corpus" id="book">
-                        <p class="help-block">Example block-level help text here.</p>
+                        <p class="help-block">文件格式需为txt</p>
                     </div>
                     <div class="form-group">
                         <label for="namelist">人物列表</label>
                         <input type="file" name="namelist" id="namelist">
-                        <p class="help-block">Example block-level help text here.</p>
+                        <p class="help-block">文件格式需为txt，一个角色一行，人物名称与别名之间可用横杠隔开，如黄药师-黄老邪</p>
                     </div>
                     <input type=submit class="btn btn-default" value=上传>
                 </form>
