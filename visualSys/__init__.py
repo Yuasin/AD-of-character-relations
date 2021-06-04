@@ -47,11 +47,18 @@ def look_book(name=None):
     print("该书籍人物列表"+name)
     return render_template('example.html', name=name)
 
+# 还原，获取原始数据
+@app.route('/restore')
+def restore(name=None):
+    global all_name, adjacency_list
+    data_list = buildJson(all_name, adjacency_list, None, None)
+    return jsonify(content=data_list)
+
 # 层次聚类
 @app.route('/cluster')
 def hierarchycluster():
     clusterNum = request.args.get('num', 5, type=int)
-    print("层次聚类测试" + str(clusterNum))
+    # print("层次聚类测试" + str(clusterNum))
     global all_name, adjacency_list
     combos_tree, labels = cluster_hierarchy(all_name, adjacency_list, clusterNum)
     data_list = buildJson(all_name, adjacency_list, combos_tree, labels)

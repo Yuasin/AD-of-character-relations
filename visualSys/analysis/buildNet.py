@@ -43,7 +43,8 @@ def buildNet(name:str):
                         adjacency_list[e][cur_entity] = 1
         section_entity.clear()
 
-    # 删除文学作品中没有出现的人物
+    print(adjacency_list)
+    # 删除文学作品中没有出现的人物以及与其它人物没有关联的人物
     deleteData(all_name,adjacency_list)
 
     # 将中文转换为拼音
@@ -59,15 +60,20 @@ def buildNet(name:str):
 
     return all_name,adjacency_list
 
+# 1.删除网络中出现次数为0的节点
+# 2.删除网络中与其它节点相邻数量为0的节点
 def deleteData(nodes:dict, edges:dict):
     delete_key = []
     for key in nodes:
         if nodes[key] == 0:
             delete_key.append(key)
+        elif len(edges[key]) == 0:
+            delete_key.append(key)
     for key in delete_key:
         del nodes[key]
         del edges[key]
 
+# 将网络中人物名称转换为英文
 def turn_pinyin(nodes: dict, edges: dict):
     new_nodes = {}
     new_edges = {}

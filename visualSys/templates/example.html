@@ -35,8 +35,8 @@
                     <h3 class="masthead-brand" style="color: white">{{ name }}</h3>
                     <nav>
                         <ul class="nav masthead-nav">
-                            <li class="active"><a href="/more">主页</a></li>
-                            <li><a href="/">查看更多</a></li>
+                            <li class="active"><a href="/">主页</a></li>
+                            <li><a href="/more">查看更多</a></li>
                             <li><a href="https://github.com/Yuasin/GP">Github</a></li>
                         </ul>
                     </nav>
@@ -234,7 +234,7 @@
                     <button class="btn btn-info btn-block" id="findpath">查看最短路径</button>
                     <p></p>
 
-                    <div style="text-align: center; margin-top: 15px">
+                    <div style="text-align: center; margin-top: 15px; margin-bottom: 15px">
                         <label for="mode">交互模式选择</label>
                         <select id="selector" name="mode">
                             <option value="default">全交互模式</option>
@@ -244,6 +244,8 @@
                             <option value="fisheyeMode">鱼眼探索模式</option>
                         </select>
                     </div>
+
+                    <button class="btn btn-danger btn-block" id="restore">还原</button>
                 </div>
             </div>
 
@@ -278,12 +280,12 @@
 
     const {louvain} = G6.Algorithm;
 
-
     // 获取面板中按钮
     const louvainbutton = document.getElementById('louvain')
     const buttonFindPath = document.getElementById('findpath')
     const hierarchybutton = document.getElementById('hierarchy')
     const showhierarchybutton = document.getElementById('showhierarchy')
+    const restorebutton = document.getElementById('restore')
 
 
     const subjectColors = [
@@ -352,7 +354,7 @@
             speed: 2, // 可选
             clustering: true, // 可选
             clusterGravity: 50, // 可选
-            maxIteration: 300, // 可选，迭代次数
+            maxIteration: 100, // 可选，迭代次数
             workerEnabled: true, // 可选，开启 web-worker
             gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
         }
@@ -368,11 +370,20 @@
         clusterNodeSize: 50,
         clusterFociStrength: 1.2,
         nodeSpacing: 5,
-        preventOverlap: true,
         workerEnabled: false, // 可选，开启 web-worker
         gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
     };
-
+    const layoutFruchterman = {
+        type: 'fruchterman',
+        center: [200, 200], // 可选，默认为图的中心
+        gravity: 0.01, // 可选
+        speed: 2, // 可选
+        clustering: true, // 可选
+        clusterGravity: 50, // 可选
+        maxIteration: 100, // 可选，迭代次数
+        workerEnabled: true, // 可选，开启 web-worker
+        gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+    };
     const layoutCombo = {
         type: 'comboForce',
         // workerEnabled和gpuEnabled中有一个是导致layout失败的罪魁祸首
@@ -440,7 +451,7 @@
                         });
                     });
                     graph.refresh();
-                    graph.updateLayout(layoutF);
+                    graph.updateLayout(layoutFruchterman);
                 });
             });
 
@@ -455,7 +466,7 @@
                     },
                     function (data) {
                         console.log("层次聚类数据获取成功")
-                        console.log(data.content)
+                        // console.log(data.content)
                         dataContent = data.content
                         graph.data(dataContent)
                         // combo交互配置
@@ -509,6 +520,22 @@
             graph.setMode(value);
             graph.removePlugin(fisheye);
         }
+    });
+
+    restorebutton.addEventListener('click', (e) => {
+        $(function () {
+            $.getJSON('/restore', {},
+                    function (data) {
+                        console.log("还原数据获取成功")
+                        // console.log(data.content)
+                        dataContent = data.content
+                        graph.data(dataContent)
+
+                        graph.render();
+                        graph.updateLayout(layoutFruchterman);
+                    });
+            return false;
+        });
     });
 
 
