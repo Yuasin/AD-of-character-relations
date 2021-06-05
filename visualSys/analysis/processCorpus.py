@@ -14,7 +14,7 @@ def get_encode_info(file):
     return detector.result['encoding']
 
 
-def getSection(name:str ,file_name: str) -> List[str]:
+def getSection(name:str ,file_name: str, replace_name:dict) -> List[str]:
     # 获取txt文件编码，
     # 若之前以及判断过该书籍的编码，则保存在一个txt文档中
     # 减少判断书籍编码所耗费的大量时间
@@ -38,7 +38,10 @@ def getSection(name:str ,file_name: str) -> List[str]:
         line = line.replace(u'\n', u'').replace(u'\u3000', u'').replace(u'    ',u'')
         if line == '':
             continue
-        # 用句号来划分太不合理了，应该用段落来进行划分
+        # 将段落中的旧词替换为新词
+        for oldc,newc in replace_name.items():
+            line = line.replace(oldc, newc)
+        # 用句号来划分不太合理，应使用段落来进行划分
         # line_cut = line.split("。")
         # sentence += line_cut
         # print(line)
