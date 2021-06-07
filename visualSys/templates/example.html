@@ -248,8 +248,6 @@
                     <button class="btn btn-danger btn-block" id="restore">还原</button>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -276,7 +274,25 @@
 <script src="./static/analyseEchart.js"></script>
 <script>
     //plugins插件
+    const toolbar = new G6.ToolBar({
+        position: {x: 50, y: 10},
+    });
 
+    const tooltip = new G6.Tooltip({
+        getContent(e) {
+            const outDiv = document.createElement('div');
+            outDiv.style.width = '180px';
+            outDiv.style.color = '#444';
+            outDiv.innerHTML ='<h4 style="text-align: left">' + e.item.getModel().label + '</h4> ' +
+                                '<ul style="text-align: left; padding-left: 15px"> ' +
+                                '<li>出现次数: '+ e.item.getModel().times +'</li> ' +
+                                '<li>相关人物数量: '+ graph.getNodeDegree(e.item.getModel().id,'in') +'</li>' +
+                                '</ul>'
+            return outDiv
+        },
+        itemTypes: ['node']
+
+    })
 
     const {louvain} = G6.Algorithm;
 
@@ -316,8 +332,24 @@
                 {
                     type: 'drag-combo',
                     onlyChangeComboSize: true,
-                },], // 允许拖拽画布、放缩画布、拖拽节点
-            relaMode: ['drag-canvas', 'zoom-canvas', 'activate-relations'],
+                },
+                // {
+                //     type: 'tooltip',
+                //     formatText(model) {
+                //         HTML = '<h4 style="text-align: left">' + model.label + '</h4> ' +
+                //                 '<ul style="text-align: left; padding-left: 5px"> ' +
+                //                 '<li>出现次数: '+ model.times +'</li> ' +
+                //                 '<li>相关人物数量: '+ graph.getNodeDegree(model.id,'in') +'</li>' +
+                //                 '</ul>'
+                //         return HTML;
+                //     },
+                //     offset: 10,
+                // }
+            ], // 允许拖拽画布、放缩画布、拖拽节点
+            relaMode: ['drag-canvas', 'zoom-canvas', {
+                type: 'activate-relations',
+                trigger: 'click'
+            }],
             viewMode: ['drag-canvas', 'zoom-canvas'],
             fisheyeMode: ['drag-canvas', 'zoom-canvas'],
             comboMode: ['drag-canvas', 'zoom-canvas', {
@@ -325,12 +357,13 @@
                 onlyChangeComboSize: true,
             }, {
                 type: 'collapse-expand-combo',
-                trigger: 'dbclick',
+                trigger: 'dblclick',
                 relayout: false, // 收缩展开后，不重新布局
             },
             ],
         },
-        plugins: [],
+        enabledStack: true,
+        plugins: [toolbar, tooltip],
         // groupByTypes: false,
         defaultCombo: {
             type: 'rect',
@@ -346,6 +379,13 @@
                     fontSize: 6
                 },
             }
+        },
+        defaultEdge: {
+            style: {
+                strokeOpacity: 0.5,
+                stroke: '#eeeeee',
+                lineWidth: 1,
+            },
         },
         layout: {
             type: 'fruchterman',
@@ -370,6 +410,7 @@
         clusterNodeSize: 50,
         clusterFociStrength: 1.2,
         nodeSpacing: 5,
+        alphaMin: 0.08, // 停止迭代阈值
         workerEnabled: false, // 可选，开启 web-worker
         gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
     };
@@ -504,16 +545,22 @@
     });
 
     //交互模式切换监听
-    const fisheye = new G6.Fisheye({
-        trigger: 'mousemove',
+    let fisheye = new G6.Fisheye({
         d: 3,
         r: 150,
-        // delegateStyle: clone(lensDelegateStyle),
         showLabel: false,
     });
     document.getElementById('selector').addEventListener('change', e => {
         const value = e.target.value;
         if (value === 'fisheyeMode') {
+            fisheye = new G6.Fisheye({
+                trigger: 'mousemove',
+                d: 3,
+                r: 150,
+                // delegateStyle: clone(lensDelegateStyle),
+                showLabel: false,
+            });
+            graph.setMode(value);
             graph.addPlugin(fisheye);
         } else {
             // 切换交互模式

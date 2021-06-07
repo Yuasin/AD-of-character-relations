@@ -19,7 +19,7 @@ def buildJson(nodes: dict, edges: dict, combos_tree:TreeNode, labels=None):
     for i in nodes.keys():
         id_node[i] = id_n
         # 对节点的size进行处理，能够突出大节点的同时不让大小节点差距过大
-        cur_nodes = {"id": str(id_n), "label": i, "size": math.ceil(math.pow(nodes[i], 1 / 3)) + 4}
+        cur_nodes = {"id": str(id_n), "label": i, "size": math.ceil(math.pow(nodes[i], 1 / 3)) + 4, "times":nodes[i]}
         data_list["nodes"].append(cur_nodes)
         id_n += 1
     # 加边

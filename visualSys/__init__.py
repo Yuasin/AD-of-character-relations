@@ -36,7 +36,7 @@ def show_example(name=None):
     global all_name, adjacency_list
     all_name, adjacency_list = buildNet('CondorHeroes')
     # print("修改后全局变量" + str(all_name))
-    return render_template('example.html', name=name)
+    return render_template('example.html', name='射雕英雄传')
 
 # 指定展示特定的书籍
 # 获取该书籍的人物列表以及邻接表
