@@ -30,8 +30,8 @@ def getSection(name:str ,file_name: str, replace_name:dict) -> List[str]:
 
     print(encode_info)
 
-    # 以写入的编码重新打开文件
-    f = open(file_name, "r",encoding='UTF-8-SIG',errors='ignore')
+    # 根据判断处的编码信息重新打开文件
+    f = open(file_name, "r",encoding=str(encode_info),errors='ignore')
 
     sentence = []
     for line in f.readlines():

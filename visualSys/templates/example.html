@@ -420,6 +420,17 @@
         gravity: 0.01, // 可选
         speed: 2, // 可选
         clustering: true, // 可选
+        clusterGravity: 150, // 可选
+        maxIteration: 100, // 可选，迭代次数
+        workerEnabled: true, // 可选，开启 web-worker
+        gpuEnabled: true, // 可选，开启 GPU 并行计算，G6 4.0 支持
+    };
+    const layoutFruchtermanNoCluster = {
+        type: 'fruchterman',
+        center: [200, 200], // 可选，默认为图的中心
+        gravity: 0.01, // 可选
+        speed: 2, // 可选
+        clustering: true, // 可选
         clusterGravity: 50, // 可选
         maxIteration: 100, // 可选，迭代次数
         workerEnabled: true, // 可选，开启 web-worker
@@ -579,7 +590,7 @@
                         graph.data(dataContent)
 
                         graph.render();
-                        graph.updateLayout(layoutFruchterman);
+                        graph.updateLayout(layoutFruchtermanNoCluster);
                     });
             return false;
         });
